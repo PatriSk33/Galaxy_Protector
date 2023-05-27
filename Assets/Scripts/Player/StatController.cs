@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public class GunStats
+{
+    public float startingFireRate;
+    public float startingDamage;
+}
+
 public class StatController : MonoBehaviour
 {
     //instance
@@ -16,37 +22,35 @@ public class StatController : MonoBehaviour
     public static float MaxHealth = 10;
 
     //Ship
-    public static int selected;
+    public static int selected = 0;
 
     //Waves
-    public static int Wave;
+    public static int Wave, WaveCompleted;
     public Text waveText;
 
     //Money & Upgrades
     public static int Money;
     public Text moneyText;
-    public static int FRUpgrade; // fire rate upgrade
-    public static int DUpgrade; // damage upgrade
+    public static int[] FireRateLvl = new int[4]; // fire rate lvl for each gun separately
+    public static int[] DamageLvl = new int[4]; // damage lvl for each gun separately
 
 
     //Finished
     public GameObject finishedScreen;
-
-    //Bonus
-    public int bonus;
+    public bool finished;
 
     public PlayfabManager playfabManager;
 
-    //Logging
-    public Toggle toggle;
+    //Stats for Guns
+    [SerializeField]private float[] startingDamage, startingFireRate;
 
     public static void CheckHealth()
     {
         if (Health <= 0)
         {
-            AfterGameController.won = false;
-            AfterGameController.afterGame = true;
             SceneManager.LoadScene(0);
+            AfterGameController.won = false;
+            AfterGameController.instance.ShowPanel();
             Health = MaxHealth;
         }
     }
@@ -55,30 +59,28 @@ public class StatController : MonoBehaviour
     {
         instance = this;
 
+        Money = PlayerPrefs.GetInt("money", 0);
+        WaveCompleted = PlayerPrefs.GetInt("WaveCompleted", 1);
+        selected = PlayerPrefs.GetInt("selected", 0);
+    }
+
+    private void Start()
+    {
         //Health
         CheckMaximumHP();
         Health = MaxHealth;
 
-        if (PlayerPrefs.HasKey("money"))
-        {
-            Money = PlayerPrefs.GetInt("money");
-        }
-        if (PlayerPrefs.HasKey("wave"))
-        {
-            Wave = PlayerPrefs.GetInt("wave");
-        }
-
-        selected = PlayerPrefs.GetInt("selected");
         UpdateStats();
         UpdateText();
 
         //Finished
-        if (Wave >= 12) { Wave = 11; }
-        if (Wave == 11)
+        if (WaveCompleted > 100) { WaveCompleted = 100; }
+        if (WaveCompleted == 100 && finished)
         {
             waveText.text = "Finished";
             finishedScreen.SetActive(true);
         }
+        if(WaveCompleted <= 1) { Wave = 1; }
     }
 
     public void FinishedOff(){finishedScreen.SetActive(false);}
@@ -101,110 +103,40 @@ public class StatController : MonoBehaviour
 
     public void Save()
     {
-        PlayerPrefs.SetInt("wave", Wave);
+        PlayerPrefs.SetInt("WaveCompleted", WaveCompleted);
         PlayerPrefs.SetInt("money", Money);
         PlayerPrefs.SetInt("selected", selected);
     }
 
     public void UpdateStats()
     {
-        switch (FRUpgrade)
+        GunStats[] gunStats = new GunStats[PlayfabManager.Instance.playerMovement.Length];
+
+        // Set individual starting values for each gun
+        for (int i = 0; i < gunStats.Length; i++)
         {
-            case 0:
-                FireRate = 1.5f;
-                break;
-            case 1:
-                FireRate = 1.4f;
-                break;
-            case 2:
-                FireRate = 1.3f;
-                break;
-            case 3:
-                FireRate = 1.2f;
-                break;
-            case 4:
-                FireRate = 1.1f;
-                break;
-            case 5:
-                FireRate = 1;
-                break;
-            case 6:
-                FireRate = 0.9f;
-                break;
-            case 7:
-                FireRate = 0.8f;
-                break;
-            case 8:
-                FireRate = 0.7f;
-                break;
-            case 9:
-                FireRate = 0.6f;
-                break;
-            case 10:
-                FireRate = 0.5f;
-                break;
-            case 11:
-                FireRate = 0.5f;
-                break;
+            gunStats[i] = new GunStats();
+            gunStats[i].startingFireRate = startingDamage[i];
+            gunStats[i].startingDamage = startingFireRate[i];
         }
 
-        switch (DUpgrade)
+        float fireRate;
+        float damage;
+        for (int i = 0; i < PlayfabManager.Instance.playerMovement.Length; i++)
         {
-            case 0:
-                Damage = 1;
-                break;
-            case 1:
-                Damage = 1.5f;
-                break;
-            case 2:
-                Damage = 2f;
-                break;
-            case 3:
-                Damage = 3f;
-                break;
-            case 4:
-                Damage = 4f;
-                break;
-            case 5:
-                Damage = 4.5f;
-                break;
-            case 6:
-                Damage = 5f;
-                break;
-            case 7:
-                Damage = 6f;
-                break;
-            case 8:
-                Damage = 6.5f;
-                break;
-            case 9:
-                Damage = 7f;
-                break;
-            case 10:
-                Damage = 8f;
-                break;
-            case 11:
-                Damage = 8.1f;
-                break;
+            fireRate = gunStats[i].startingFireRate - (FireRateLvl[i] * 0.08f);
+            damage = gunStats[i].startingDamage + (DamageLvl[i] * 0.8f);
+
+            FireRate = Mathf.Clamp(fireRate, 0.3f, 2);
+            Damage = Mathf.Clamp(damage, 2f, 18f);
         }
     }
 
+
+    private static readonly float[] maxHealthValues = { 25f, 50f, 75f, 100f};
     private void CheckMaximumHP()
     {
-        switch(selected) 
-        { 
-            case 0:
-                MaxHealth = 10;
-                break;
-            case 1:
-                MaxHealth = 14;
-                break;
-            case 2:
-                MaxHealth = 18;
-                break;
-            case 3:
-                MaxHealth = 20;
-                break;
-        }
+        int selectedValue = Mathf.Clamp(selected, 0, maxHealthValues.Length - 1);
+        MaxHealth = maxHealthValues[selectedValue];
     }
 }

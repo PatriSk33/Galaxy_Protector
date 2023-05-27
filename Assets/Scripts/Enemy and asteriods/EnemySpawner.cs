@@ -6,167 +6,188 @@ using UnityEngine.SceneManagement;
 public class EnemySpawner : MonoBehaviour
 {
     public static EnemySpawner Instance;
-    public List<GameObject> stonesPrefabs;
-    public List<GameObject> enemyPrefabsEasy; // Array of enemy prefabs to spawn
-    public List<GameObject> enemyPrefabsMedium; // Array of enemy prefabs to spawn
-    public List<GameObject> enemyPrefabsHard; // Array of enemy prefabs to spawn
-    public List<GameObject> enemiesOnField;
-    public float spawnDelay = 2f; // Delay between enemy spawns
-    public float spawnDelayAsteroids = 10f; // Delay between enemy spawns
-    public int maxEnemies; // Maximum number of enemies to spawn
 
-    private int numEnemiesSpawned = 0;
-    private bool waited = false;
-    private bool longwaited = false;
+    [Header("Random things to shoot at player")]
+    public List<GameObject> randomThingsPrefabs;
 
-    private int xRange = 27;
+    [Header("Enemies in waves")]
+    List<GameObject>[] enemyPrefabs = new List<GameObject>[100];
+    [Tooltip("0 - 5")] public List<GameObject> enemyPrefabs5;
+    [Tooltip("5 - 10")] public List<GameObject> enemyPrefabs10;
+    [Tooltip("10 - 15")] public List<GameObject> enemyPrefabs15;
+    [Tooltip("15 - 20")] public List<GameObject> enemyPrefabs20;
+    [Tooltip("20 - 25")] public List<GameObject> enemyPrefabs25;
+    [Tooltip("25 - 30")] public List<GameObject> enemyPrefabs30;
+    [Tooltip("30 - 35")] public List<GameObject> enemyPrefabs35;
+    [Tooltip("35 - 40")] public List<GameObject> enemyPrefabs40;
+    [Tooltip("40 - 45")] public List<GameObject> enemyPrefabs45;
+    [Tooltip("45 - 50")] public List<GameObject> enemyPrefabs50;
+    [Tooltip("50 - 55")] public List<GameObject> enemyPrefabs55;
+    [Tooltip("55 - 60")] public List<GameObject> enemyPrefabs60;
+    [Tooltip("60 - 65")] public List<GameObject> enemyPrefabs65;
+    [Tooltip("65 - 70")] public List<GameObject> enemyPrefabs70;
+    [Tooltip("70 - 75")] public List<GameObject> enemyPrefabs75;
+    [Tooltip("75 - 80")] public List<GameObject> enemyPrefabs80;
+    [Tooltip("80 - 85")] public List<GameObject> enemyPrefabs85;
+    [Tooltip("85 - 90")] public List<GameObject> enemyPrefabs90;
+    [Tooltip("90 - 95")] public List<GameObject> enemyPrefabs95;
+    [Tooltip("95 - 100")] public List<GameObject> enemyPrefabs100;
 
-    // UFO types
-    public GameObject bossPrefab;
 
-    public bool spawnedBoss = false;
+    [HideInInspector]public List<GameObject> enemiesOnField;
+
+    private float spawnDelay = 2f; // Delay between enemy spawns
+    private float spawnDelayRandomThings = 13f; // Delay between random things spawns
+    private int xRange = 30; //Range where can enemies spawn on X axis
+    private int numEnemiesSpawned = 0; //How many Enemies are already spawned
+    private int maxEnemies; // Maximum number of enemies to spawn
+
+    //Boss
+    [Header("Boss")]
+    public GameObject[] bossPrefab;
 
     private void Awake()
     {
         Instance = this;
         UpdateMaxEnemiesCount();
+
+        enemyPrefabs[0] = enemyPrefabs5;
+        enemyPrefabs[1] = enemyPrefabs10;
+        enemyPrefabs[2] = enemyPrefabs15;
+        enemyPrefabs[3] = enemyPrefabs20;
+        enemyPrefabs[4] = enemyPrefabs25;
+        enemyPrefabs[5] = enemyPrefabs30;
+        enemyPrefabs[6] = enemyPrefabs35;
+        enemyPrefabs[7] = enemyPrefabs40;
+        enemyPrefabs[8] = enemyPrefabs45;
+        enemyPrefabs[9] = enemyPrefabs50;
+        enemyPrefabs[10] = enemyPrefabs55;
+        enemyPrefabs[11] = enemyPrefabs60;
+        enemyPrefabs[12] = enemyPrefabs65;
+        enemyPrefabs[13] = enemyPrefabs70;
+        enemyPrefabs[14] = enemyPrefabs75;
+        enemyPrefabs[15] = enemyPrefabs80;
+        enemyPrefabs[16] = enemyPrefabs85;
+        enemyPrefabs[17] = enemyPrefabs90;
+        enemyPrefabs[18] = enemyPrefabs95;
+        enemyPrefabs[19] = enemyPrefabs100;
     }
-    void Start()
+    private void Start()
     {
-        InvokeRepeating("SpawnEnemy", spawnDelay, spawnDelay);
-        InvokeRepeating("SpawnAsteroids", spawnDelayAsteroids, spawnDelayAsteroids);
+        StartCoroutine(SpawnEnemy());
+        InvokeRepeating("SpawnRandomThings", spawnDelayRandomThings, spawnDelayRandomThings);
     }
 
-    void SpawnEnemy()
+    IEnumerator SpawnEnemy()
     {
+        int xP = Random.Range(-xRange, xRange);
+        GameObject enemy = null;
+        GameObject enemyObject = null;
+        int prefabIndex;
+
         if (numEnemiesSpawned >= maxEnemies)
         {
-            return;
+            yield break;
         }
 
-        int xP = Random.Range(-xRange, xRange); // Choose random X position 
-
-        GameObject enemy = null;
-        if (StatController.Wave == 10 && numEnemiesSpawned == 39 && !spawnedBoss)
+        if (StatController.Wave <= 100)
         {
-            enemy = Instantiate(bossPrefab, new Vector3(xP, 0, 50), new Quaternion(0, 180, 0, 0));
-            spawnedBoss = true;
+            int waveIndex = (StatController.Wave - 1) / 5;
+            if (waveIndex < enemyPrefabs.Length)
+            {
+                List<GameObject> waveEnemyPrefabs = enemyPrefabs[waveIndex];
+                prefabIndex = Random.Range(0, waveEnemyPrefabs.Count);
+                enemy = waveEnemyPrefabs[prefabIndex];
+            }
         }
-        else if (StatController.Wave >= 7 && numEnemiesSpawned != 39)
+        else
         {
-            int prefabIndex = Random.Range(0, enemyPrefabsMedium.Count); // Choose a random enemy prefab from the array
-            enemy = Instantiate(enemyPrefabsHard[prefabIndex], new Vector3(xP, 0, 50), new Quaternion(0, 180, 0, 0));
-        }
-        else if (StatController.Wave >= 4)
-        {
-            int prefabIndex = Random.Range(0, enemyPrefabsMedium.Count); // Choose a random enemy prefab from the array
-            enemy = Instantiate(enemyPrefabsMedium[prefabIndex], new Vector3(xP, 0, 50), new Quaternion(0, 180, 0, 0));
-        }
-        else if (StatController.Wave <= 3)
-        {
-            int prefabIndex = Random.Range(0, enemyPrefabsEasy.Count); // Choose a random enemy prefab from the array
-            enemy = Instantiate(enemyPrefabsEasy[prefabIndex], new Vector3(xP, 0, 50), new Quaternion(0, 180, 0, 0));
-        }
-        
-        numEnemiesSpawned++;
-
-        enemiesOnField.Add(enemy);
-
-        if (numEnemiesSpawned > maxEnemies / 2 && StatController.Wave > 3 && waited == false)
-        {
-            StartCoroutine("Wait");
-            longwaited = false;
-        }
-        else if (numEnemiesSpawned > maxEnemies / 1.1f && StatController.Wave > 8 && longwaited == false)
-        {
-            StartCoroutine("Wait");
+            yield break;
         }
 
-    }
-    void SpawnAsteroids()
-    {
-        int Index = Random.Range(0, stonesPrefabs.Count);
+        // Check if the current wave is a boss wave
+        bool isBossWave = (StatController.Wave % 10 == 0) && (numEnemiesSpawned == maxEnemies - 1);
+        if (isBossWave)
+        {
+            StartCoroutine(Wait(30, true));
+            yield break;
+        }
 
-        int xP = Random.Range(-17, 17); // Choose random X position
+        enemyObject = Instantiate(enemy, new Vector3(xP, 0, 49), enemy.transform.rotation);
 
-        GameObject stones = Instantiate(stonesPrefabs[Index], new Vector3(xP, 0, 100), new Quaternion(0, 180, 0, 0));
+        if (enemy != null)
+        {
+            numEnemiesSpawned++;
+            enemiesOnField.Add(enemyObject);
+        }
+
+        if (!isBossWave && numEnemiesSpawned % 15 == 0 && numEnemiesSpawned > 0)
+        {
+            StartCoroutine(Wait(30, false));
+        }
+        else
+        {
+            yield return new WaitForSeconds(spawnDelay);
+            StartCoroutine(SpawnEnemy());
+        }
     }
 
-    IEnumerator Wait()
+    void SpawnRandomThings()
     {
-        CancelInvoke("SpawnEnemy");
-        waited = true;
-        longwaited = true;
-        yield return new WaitForSeconds(30);
-        InvokeRepeating("SpawnEnemy", spawnDelay, spawnDelay);
+        int Index = Random.Range(0, randomThingsPrefabs.Count);
+
+        Instantiate(randomThingsPrefabs[Index], new Vector3(PlayerMovement.curPos.x, -1.5f, 70), new Quaternion(0, 180, 0, 0));
+    }
+
+    IEnumerator Wait(float waitTime, bool isBossWave)
+    {
+        if (enemiesOnField.Count > 0)
+        {
+            yield return new WaitForSeconds(waitTime);
+        }
+        if (isBossWave)
+        {
+            int bossIndex = (StatController.Wave / 10) - 1;
+            GameObject enemy = bossPrefab[bossIndex];
+            GameObject enemyObject = Instantiate(enemy, new Vector3(Random.Range(-xRange, xRange), 0, 65), enemy.transform.rotation);
+
+            if (enemy != null)
+            {
+                numEnemiesSpawned++;
+                enemiesOnField.Add(enemyObject);
+            }
+            yield break;
+        }
+        StartCoroutine(SpawnEnemy());
     }
 
     public void CheckEnemies()
     {
         if (enemiesOnField.Count == 0 && numEnemiesSpawned == maxEnemies)
         {
-            waited = false;
-            longwaited = false;
-            if (StatController.Wave < 11)
+            if (StatController.Wave == StatController.WaveCompleted)
             {
-                StatController.Wave++;
+                if (StatController.WaveCompleted < 100)
+                {
+                    StatController.WaveCompleted++;
+                }
+                else if (StatController.Wave == 100)
+                {
+                    StatController.instance.finished = true;
+                }
             }
             StatController.instance.Save();
             AfterGameController.won = true;
-            AfterGameController.afterGame = true;
-            SceneManager.LoadScene(0);
+            AfterGameController.instance.ShowPanel();
         }
     }
 
     private void UpdateMaxEnemiesCount()
     {
-        switch (StatController.Wave)
+        if (StatController.Wave >= 1 && StatController.Wave <= 100)
         {
-            case 0:
-                maxEnemies = 5;
-                spawnDelayAsteroids = 10f;
-                break;
-            case 1:
-                maxEnemies = 7;
-                spawnDelayAsteroids = 10f;
-                break;
-            case 2:
-                maxEnemies = 10;
-                spawnDelayAsteroids = 9f;
-                break;
-            case 3:
-                maxEnemies = 14;
-                spawnDelayAsteroids = 9f;
-                break;
-            case 4:
-                maxEnemies = 16;
-                spawnDelayAsteroids = 8f;
-                break;
-            case 5:
-                maxEnemies = 19;
-                spawnDelayAsteroids = 8f;
-                break;
-            case 6:
-                maxEnemies = 21;
-                spawnDelayAsteroids = 7f;
-                break;
-            case 7:
-                maxEnemies = 25;
-                spawnDelayAsteroids = 7f;
-                break;
-            case 8:
-                maxEnemies = 30;
-                spawnDelayAsteroids = 6f;
-                break;
-            case 9:
-                maxEnemies = 35;
-                spawnDelayAsteroids = 5f;
-                break;
-            case 10:
-                maxEnemies = 40;
-                spawnDelayAsteroids = 4f;
-                spawnedBoss = false;
-                break;
+            maxEnemies = 2 + (StatController.Wave - 1) * 2;
+            spawnDelayRandomThings = 13 - (StatController.Wave - 1) / 10;
         }
     }
 }

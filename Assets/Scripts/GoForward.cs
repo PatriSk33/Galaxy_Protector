@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class GoForward : MonoBehaviour
 {
-    private float lifeTime = 5;
-    private int bulletHealth = 2;
+    private float lifeTime = 3;
+    public int bulletHealth = 2;
     public bool isPlayerBullet, isBossBullet;
     [HideInInspector] public float damage;
 
     void Update()
     {
-        transform.Translate(Vector3.forward * 10 * Time.deltaTime);
+        transform.Translate(Vector3.forward * 15 * Time.deltaTime);
         if (lifeTime > 0)
         {
             lifeTime -= Time.deltaTime;

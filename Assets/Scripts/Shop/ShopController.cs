@@ -12,7 +12,7 @@ public class ShopController : MonoBehaviour
     int x;
 
     int Rockets;
-    public bool[] buyed = new bool[4];
+    public static bool[] buyed = new bool[4];
     public int[] price = new int[4];
 
     //Textovky
@@ -28,12 +28,8 @@ public class ShopController : MonoBehaviour
 
     private void Awake()
     {
-        if (!alreadyStarted) 
-        { 
-            alreadyStarted = true;
-            SceneManager.LoadScene(0); 
-            instance = this; 
-        }
+        instance = this;
+
         Rockets = 0;
         priceTag.gameObject.SetActive(false);
         buyButton.gameObject.SetActive(false);
@@ -43,10 +39,14 @@ public class ShopController : MonoBehaviour
 
     private void Start()
     {
-        GetIfBuyed();
+        //GetIfBuyed();
+    }
+    private void Update()
+    {
+        cam.transform.position = Vector3.MoveTowards(cam.transform.position, new Vector3(x, 4, -11), Time.deltaTime * 100);
     }
 
-    public void GetIfBuyed()
+    /*public void GetIfBuyed()
     {
         if (PlayerPrefs.HasKey("Dual"))
         {
@@ -54,13 +54,13 @@ public class ShopController : MonoBehaviour
             buyed[2] = intToBool(PlayerPrefs.GetInt("Triple"));
             buyed[3] = intToBool(PlayerPrefs.GetInt("Cannon"));
         }
-    }
-    public void SaveAsBuyed()
+    }*/
+    /*public void SaveAsBuyed()
     {
         PlayerPrefs.SetInt("Dual", boolToInt(buyed[1]));
         PlayerPrefs.SetInt("Triple", boolToInt(buyed[2]));
         PlayerPrefs.SetInt("Cannnon", boolToInt(buyed[3]));
-    }
+    }*/
     public void MoveLeft()
     {
         if (cam.transform.position.x == 0)
@@ -83,7 +83,7 @@ public class ShopController : MonoBehaviour
                 priceTag.text = price[Rockets].ToString();
             }
         }
-        else
+        else if (Rockets != 0)
         {
             x -= 15;
             Rockets--;
@@ -103,7 +103,6 @@ public class ShopController : MonoBehaviour
                 priceTag.text = price[Rockets].ToString();
             }
         }
-        cam.transform.position = new Vector3(x, 4, -11);
     }
     public void MoveRight()
     {
@@ -115,7 +114,7 @@ public class ShopController : MonoBehaviour
             selectButton.gameObject.SetActive(true);
             priceTag.gameObject.SetActive(false);
         }
-        else
+        else if(Rockets != 3)
         {
             x += 15;
             Rockets++;
@@ -135,50 +134,34 @@ public class ShopController : MonoBehaviour
                 priceTag.text = price[Rockets].ToString();
             }
         }
-        cam.transform.position = new Vector3(x, 4, -11);
     }
 
 
     public void BuyNow()
     {
-        if (StatController.Money >= price[Rockets])
+        if (StatController.Money < price[Rockets])
         {
-            switch (Rockets)
-            {
-                case 1:
-                    buyed[Rockets] = true;
-                    StatController.Money -= price[Rockets];
-                    buyButton.gameObject.SetActive(false);
-                    selectButton.gameObject.SetActive(true);
-                    priceTag.gameObject.SetActive(false);
-                    break;
-                case 2:
-                    if (buyed[Rockets - 1])
-                    {
-                        buyed[Rockets] = true;
-                        StatController.Money -= price[Rockets];
-                        buyButton.gameObject.SetActive(false);
-                        selectButton.gameObject.SetActive(true);
-                        priceTag.gameObject.SetActive(false);
-                    }
-                    break;
-                case 3:
-                    if (buyed[Rockets -1 ])
-                    {
-                        buyed[Rockets] = true;
-                        StatController.Money -= price[Rockets];
-                        buyButton.gameObject.SetActive(false);
-                        selectButton.gameObject.SetActive(true);
-                        priceTag.gameObject.SetActive(false);
-                    }
-                    break;
-            }
-
-            SaveAsBuyed();
-            StatController.instance.Save();
-            
+            Debug.Log("Not enough money...");
+            notEnoughMoneySound.Play();
+            return;
         }
-        else { Debug.Log("Not enough Money..."); notEnoughMoneySound.Play(); }
+
+        if (Rockets == 1 || buyed[Rockets - 1])
+        {
+            buyed[Rockets] = true;
+            StatController.Money -= price[Rockets];
+            
+            buyButton.gameObject.SetActive(false);
+            selectButton.gameObject.SetActive(true);
+            priceTag.gameObject.SetActive(false);
+            select.text = "Select";
+            
+            //SaveAsBuyed();
+            StatController.instance.Save();
+            PlayfabManager.Instance.SaveGuns();
+
+            LevelPlayAds.Instance.ShowFullSizeAd();
+        }
     }
     public void Select()
     {
@@ -187,6 +170,7 @@ public class ShopController : MonoBehaviour
             StatController.selected = Rockets;
             select.text = "Selected";
             StatController.instance.Save();
+            StatController.instance.UpdateStats();
         }
         else
         {

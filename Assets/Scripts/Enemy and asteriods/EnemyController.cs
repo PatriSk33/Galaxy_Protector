@@ -5,16 +5,20 @@ using UnityEngine.Audio;
 
 public class EnemyController : MonoBehaviour
 {
-    public float health = 3;
     public GameObject bulletPrefab;
+
+    [Header("Stats")]
+    public float health = 3f;
     public float damage;
-    public float fireRate = 2;
-    private float moveTime = 6;
-    public  int amountOfMoney = 5;
+    public float fireRate = 2f;
+    private float moveTime = 7f;
+    private float moveSpeed = 3f;
+    public int amountOfMoney = 5;
     public bool isBoss;
 
-    public bool laserIn;
+    [HideInInspector] public bool laserIn;
 
+    [Header("Effects")]
     public GameObject explosion;
 
     private void Awake()
@@ -30,14 +34,14 @@ public class EnemyController : MonoBehaviour
         //Make it go forward for a bit and then start shooting
         if (moveTime > 0)
         {
-            transform.Translate(Vector3.forward * 3 * Time.deltaTime);
+            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
             moveTime -= Time.deltaTime;
         }
 
         //Behavior if the laser of the 4.spaceship is touching the enemy
         if (laserIn)
         {
-            health -= Time.deltaTime * StatController.Damage - 1;
+            health -= Time.deltaTime * (StatController.Damage - (StatController.FireRate - 2));
         }
 
         //Don't make it go up or down
@@ -53,6 +57,15 @@ public class EnemyController : MonoBehaviour
         if (transform.position.z < 29)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, 29);
+        }
+        //Barriers Left and Right
+        if (transform.position.x < -27)
+        {
+            transform.position = new Vector3(-27, transform.position.y, transform.position.z);
+        }
+        if (transform.position.x > 27)
+        {
+            transform.position = new Vector3(27, transform.position.y, transform.position.z);
         }
     }
 
@@ -74,23 +87,25 @@ public class EnemyController : MonoBehaviour
 
     void Death()
     {
+        //Explosion
         SoundManager.instance.EnemyExploded();
         Instantiate(explosion, transform.position, transform.rotation);
-        if (StatController.instance.bonus == 1) { 
-            //StatController.Money += Mathf.CeilToInt(amountOfMoney + amountOfMoney * 0.2f);
-            AfterGameController.addedMoney += Mathf.CeilToInt(amountOfMoney + amountOfMoney * 0.2f);
-        }
-        else if (StatController.instance.bonus == 0)
-        {
-            //StatController.Money += amountOfMoney;
-            AfterGameController.addedMoney += amountOfMoney;
-        }
+
+        //Calculate how much money you get
+        AfterGameController.addedMoney += amountOfMoney;
+
+        //Remove it from enemies on field
         EnemySpawner.Instance.enemiesOnField.Remove(this.gameObject);
+
+        //Remove this enemy from player laser array
         if (StatController.selected == 3)
         {
             Laser.instance.colliders.Remove(this.gameObject.GetComponent<Collider>());
         }
-        Destroy(gameObject);
+
+        //Check if there are more enemies on the field?
         EnemySpawner.Instance.CheckEnemies();
+
+        Destroy(gameObject);
     }
 }

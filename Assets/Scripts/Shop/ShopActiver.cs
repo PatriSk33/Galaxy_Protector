@@ -5,11 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class ShopActiver : MonoBehaviour
 {
-    public AdsInitializer AdsInitializer;
     public void GoToShop()
     {
         SceneManager.LoadScene("Shop");
-        AdsInitializer.InitializeAds();
     }
     public void GoToHome()
     {
