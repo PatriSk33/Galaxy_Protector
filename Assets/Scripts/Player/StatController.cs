@@ -16,10 +16,10 @@ public class StatController : MonoBehaviour
     public static StatController instance;
 
     //Player
-    public static float Damage = 1;
-    public static float FireRate = 1.5f;
-    public static float Health = 10;
-    public static float MaxHealth = 10;
+    public static float Damage;
+    public static float FireRate;
+    public static float Health;
+    public static float MaxHealth;
 
     //Ship
     public static int selected = 0;
@@ -44,17 +44,6 @@ public class StatController : MonoBehaviour
     //Stats for Guns
     [SerializeField]private float[] startingDamage, startingFireRate;
 
-    public static void CheckHealth()
-    {
-        if (Health <= 0)
-        {
-            SceneManager.LoadScene(0);
-            AfterGameController.won = false;
-            AfterGameController.instance.ShowPanel();
-            Health = MaxHealth;
-        }
-    }
-
     private void Awake()
     {
         instance = this;
@@ -66,6 +55,9 @@ public class StatController : MonoBehaviour
 
     private void Start()
     {
+        //---------------------------------Cheats----------------------------//
+        //Money = 5000;
+
         //Health
         CheckMaximumHP();
         Health = MaxHealth;
@@ -80,18 +72,23 @@ public class StatController : MonoBehaviour
             waveText.text = "Finished";
             finishedScreen.SetActive(true);
         }
-        if(WaveCompleted <= 1) { Wave = 1; }
+        Wave = WaveCompleted; 
+        UpdateText(); 
     }
 
-    public void FinishedOff(){finishedScreen.SetActive(false);}
+    public void FinishedOff(){ finishedScreen.SetActive(false); }
 
-    private void OnApplicationQuit()
+    private void OnApplicationPause(bool pause)
     {
-        Save();
-        Debug.Log("quited the app!!!!");
-        if (PlayerPrefs.HasKey("password") && PlayerPrefs.HasKey("email"))
+        if (pause && SceneManager.GetActiveScene().buildIndex == 0)
         {
-            PlayfabManager.Instance.SavePlayerPrefbs();
+            Save();
+            Debug.Log("quited the app!!!!");
+            if (PlayerPrefs.HasKey("password") && PlayerPrefs.HasKey("email"))
+            {
+                PlayfabManager.Instance.SavePlayerPrefbs();
+                PlayfabManager.Instance.SaveGuns();
+            }
         }
     }
 
@@ -106,6 +103,10 @@ public class StatController : MonoBehaviour
         PlayerPrefs.SetInt("WaveCompleted", WaveCompleted);
         PlayerPrefs.SetInt("money", Money);
         PlayerPrefs.SetInt("selected", selected);
+        if (PlayerPrefs.HasKey("password") && PlayerPrefs.HasKey("email"))
+        {
+            PlayfabManager.Instance.SavePlayerPrefbs();
+        }
     }
 
     public void UpdateStats()
@@ -116,24 +117,22 @@ public class StatController : MonoBehaviour
         for (int i = 0; i < gunStats.Length; i++)
         {
             gunStats[i] = new GunStats();
-            gunStats[i].startingFireRate = startingDamage[i];
-            gunStats[i].startingDamage = startingFireRate[i];
+            gunStats[i].startingFireRate = startingFireRate[i];
+            gunStats[i].startingDamage = startingDamage[i];
         }
 
         float fireRate;
         float damage;
-        for (int i = 0; i < PlayfabManager.Instance.playerMovement.Length; i++)
-        {
-            fireRate = gunStats[i].startingFireRate - (FireRateLvl[i] * 0.08f);
-            damage = gunStats[i].startingDamage + (DamageLvl[i] * 0.8f);
 
-            FireRate = Mathf.Clamp(fireRate, 0.3f, 2);
-            Damage = Mathf.Clamp(damage, 2f, 18f);
-        }
+        fireRate = gunStats[selected].startingFireRate - (FireRateLvl[selected] * 0.08f);
+        damage = gunStats[selected].startingDamage + (DamageLvl[selected] * 0.8f);
+
+        FireRate = Mathf.Clamp(fireRate, 0.3f, 1.8f);
+        Damage = Mathf.Clamp(damage, 2f, 18f);
     }
 
 
-    private static readonly float[] maxHealthValues = { 25f, 50f, 75f, 100f};
+    private static readonly float[] maxHealthValues = { 20f, 60f, 100f, 150f};
     private void CheckMaximumHP()
     {
         int selectedValue = Mathf.Clamp(selected, 0, maxHealthValues.Length - 1);

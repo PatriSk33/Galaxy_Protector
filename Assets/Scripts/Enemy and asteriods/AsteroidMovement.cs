@@ -36,11 +36,17 @@ public class AsteroidMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
-            SoundManager.instance.PlayOnPlayerHit();
+            SoundManager.instance.PlayOnPlayerHit(); //Player got hit sound
+
+            //Damage player
             StatController.Health -= damage;
-            StatController.CheckHealth();
+            if (StatController.Health <= 0)
+            {
+                GameplayUIButtons.instance.OpenRevivePanel();
+            }
+            
             Destroy(gameObject);
         }
     }

@@ -9,8 +9,23 @@ public class WaveSelector : MonoBehaviour
 
     public void Select()
     {
-        if (StatController.Wave <= StatController.WaveCompleted && int.Parse(waveInput.text) > 0) {
-            StatController.Wave = int.Parse(waveInput.text);
+        if (waveInput.text.Length > 0)
+        {
+            if (int.Parse(waveInput.text) <= StatController.WaveCompleted && int.Parse(waveInput.text) > 0)
+            {
+                StatController.Wave = int.Parse(waveInput.text);
+                StatController.instance.UpdateText();
+            }
+            else
+            {
+                StatController.Wave = StatController.WaveCompleted;
+                StatController.instance.UpdateText();
+            }
+        }
+        else
+        {
+            StatController.Wave = StatController.WaveCompleted;
+            StatController.instance.UpdateText();
         }
     }
 }

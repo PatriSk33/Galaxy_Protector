@@ -13,8 +13,8 @@ public class EnemyController : MonoBehaviour
     public float fireRate = 2f;
     private float moveTime = 7f;
     private float moveSpeed = 3f;
-    public int amountOfMoney = 5;
-    public bool isBoss;
+    public int amountOfMoney;
+    [Tooltip("0 = easy, 1 = medium, 2 = hard, 3 = boss")]public int enemyIndex;
 
     [HideInInspector] public bool laserIn;
 
@@ -71,17 +71,55 @@ public class EnemyController : MonoBehaviour
 
     void Shoot()
     {
-        if (isBoss)
+        GameObject bullet = null;
+        switch (enemyIndex)
         {
-            GameObject bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-1,0,0), transform.rotation) as GameObject;
-            bullet.GetComponent<GoForward>().damage = damage;
-            bullet = Instantiate(bulletPrefab, transform.position + new Vector3(+1, 0, 0), transform.rotation) as GameObject;
-            bullet.GetComponent<GoForward>().damage = damage;
-        }
-        else
-        {
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
-            bullet.GetComponent<GoForward>().damage = damage;
+            case 0:
+                bullet = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                break;
+            case 1:
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-1,0,0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(+1, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                break;
+            case 2:
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, -4, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, 4, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                break;
+            case 3:
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, -3, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, 3, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, -6, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, 6, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                break;
+            default:
+                Debug.LogError("Wrong enemyIndex set!");
+                break;
         }
     }
 

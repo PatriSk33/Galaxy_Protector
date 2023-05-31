@@ -23,17 +23,6 @@ public class UpgradeManager : MonoBehaviour
 
     private void Start()
     {
-        /*if (PlayerPrefs.HasKey("DmgLvl"))
-        {
-            DmgLvl = PlayerPrefs.GetInt("DmgLvl");
-            StatController.DUpgrade[StatController.selected] = DmgLvl;
-        }
-        if (PlayerPrefs.HasKey("FireRateLvl"))
-        {
-            FireRateLvl = PlayerPrefs.GetInt("FireRateLvl");
-            StatController.FRUpgrade[StatController.selected] = FireRateLvl;
-        }*/
-
         UpdatePriceTag();
     }
 
@@ -54,8 +43,6 @@ public class UpgradeManager : MonoBehaviour
                 PlayfabManager.Instance.SaveGuns();
 
                 powerup.Play();
-
-                //PlayerPrefs.SetInt("FireRateLvl", FireRateLvl);
             }
             else
             {
@@ -63,9 +50,9 @@ public class UpgradeManager : MonoBehaviour
                 notEnoughMoneySound.Play();
             }
         }
-        else 
+        else if(StatController.FireRateLvl[StatController.selected] == 5)
         {
-            if (StatController.Money >= FireRatePrice && StatController.FireRateLvl[StatController.selected] == 5)
+            if (StatController.Money >= FireRatePrice)
             {
                 StatController.Money -= FireRatePrice;
                 StatController.FireRateLvl[StatController.selected]++;
@@ -78,7 +65,6 @@ public class UpgradeManager : MonoBehaviour
                 PlayfabManager.Instance.SaveGuns();
 
                 powerup.Play();
-                //PlayerPrefs.SetInt("FireRateLvl", FireRateLvl);
             }
             else
             {
@@ -104,8 +90,6 @@ public class UpgradeManager : MonoBehaviour
                 PlayfabManager.Instance.SaveGuns();
 
                 powerup.Play();
-                
-                //PlayerPrefs.SetInt("DmgLvl", DmgLvl);
             }
             else
             {
@@ -113,9 +97,9 @@ public class UpgradeManager : MonoBehaviour
                 notEnoughMoneySound.Play();
             }
         }
-        else
+        else if(StatController.DamageLvl[StatController.selected] == 5)
         {
-            if (StatController.Money >= DmgPrice && StatController.DamageLvl[StatController.selected] == 5)
+            if (StatController.Money >= DmgPrice)
             {
                 StatController.Money -= DmgPrice;
                 StatController.DamageLvl[StatController.selected]++;
@@ -128,8 +112,6 @@ public class UpgradeManager : MonoBehaviour
                 PlayfabManager.Instance.SaveGuns();
 
                 powerup.Play();
-
-                //PlayerPrefs.SetInt("DmgLvl", DmgLvl);
             }
             else
             {

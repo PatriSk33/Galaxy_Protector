@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     public static Vector2 move;
     public static Vector3 curPos;
 
+    private float movementSpeed = 8;
     private float fireRate;
     private float xRange = 30;
     private float cooldown;
@@ -30,7 +31,8 @@ public class PlayerMovement : MonoBehaviour
     public GameObject bulletPrefab;
 
     //Audio
-    public AudioSource shootSound;
+    public AudioSource audioSource;
+    public AudioClip[] shootSounds;
 
     public Gun ReturnClass(int i)
     {
@@ -71,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Move left and Right
-        transform.Translate(Vector3.right * Time.deltaTime * 5 * move, Space.World);
+        transform.Translate(Vector3.right * Time.deltaTime * movementSpeed * move, Space.World);
 
         // Laser ship
         if (LaserSpaceship && cooldown < Time.time)
@@ -88,7 +90,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 Instantiate(bulletPrefab, spawnpoints[i].transform.position, Quaternion.identity);
             }
-            shootSound.Play();
+
+            // Randomly select a shoot sound from the array
+            AudioClip randomShootSound = shootSounds[Random.Range(0, shootSounds.Length)];
+            // Play the selected shoot sound
+            audioSource.PlayOneShot(randomShootSound);
         }          
     }
 

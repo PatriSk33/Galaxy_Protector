@@ -418,13 +418,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfbadcc05f76d474a9a5e3b1c1f76612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 0
-  bulletPrefab: {fileID: 8212551806542911532, guid: 55464a076065d364d993c9f562a3c9ba,
-    type: 3}
   LaserSpaceship: 0
   spawnpoints:
   - {fileID: 3137397546735225728}
-  shootSound: {fileID: 7402695900774771072}
+  bulletPrefab: {fileID: 8212551806542911532, guid: 55464a076065d364d993c9f562a3c9ba,
+    type: 3}
+  audioSource: {fileID: 7402695900774771072}
+  shootSounds:
+  - {fileID: 8300000, guid: fa25840cbee376145b9bf3320bc34cfe, type: 3}
+  - {fileID: 8300000, guid: f429c03256314604d996c45452a4c833, type: 3}
+  - {fileID: 8300000, guid: 4e7d89f1153379c42ae7c6e3f8bb185c, type: 3}
 --- !u!82 &7402695900774771072
 AudioSource:
   m_ObjectHideFlags: 0
@@ -434,8 +437,9 @@ AudioSource:
   m_GameObject: {fileID: 3740173773941226112}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: a01d39f7bdaafee4a8fa40b6f4ce7fa9, type: 3}
+  OutputAudioMixerGroup: {fileID: 8933694644086748021, guid: 1e21998a3c16e504a9273b44dcf6b608,
+    type: 2}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

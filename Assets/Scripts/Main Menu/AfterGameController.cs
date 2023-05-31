@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class AfterGameController : MonoBehaviour
@@ -19,22 +20,27 @@ public class AfterGameController : MonoBehaviour
     public void Continue()
     {
         AfterGamePanel.SetActive(false);
+
         StatController.Money += addedMoney;
         addedMoney = 0;
-        StatController.instance.UpdateText();
+
+        StatController.Wave++;
         StatController.instance.Save();
+        Time.timeScale = 1;
+        SceneManager.LoadScene(0);
     }
     public void ShowPanel()
     {
         Debug.Log("Opened After Game panel");
         AfterGamePanel.SetActive(true);
         UpdateText();
+        Time.timeScale = 0;
     }
 
     public void UpdateText()
     {
         if (won) {
-            ifCompleted.text = "Wave " + (StatController.Wave - 1).ToString() + " Completed"; 
+            ifCompleted.text = "Wave " + (StatController.Wave).ToString() + " Completed"; 
         }
         else if (!won)
         {

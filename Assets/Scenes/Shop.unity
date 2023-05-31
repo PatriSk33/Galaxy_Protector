@@ -427,7 +427,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 97bdd5ebc05fa714287df9b631c429a3, type: 3}
     m_FontSize: 14
     m_FontStyle: 1
     m_BestFit: 1
@@ -1154,7 +1154,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 97bdd5ebc05fa714287df9b631c429a3, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 1
@@ -1674,7 +1674,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 97bdd5ebc05fa714287df9b631c429a3, type: 3}
     m_FontSize: 14
     m_FontStyle: 1
     m_BestFit: 1
@@ -1893,7 +1893,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 264306868}
-  buyed: 01000000
   price: 00000000e8030000c409000088130000
   select: {fileID: 1590220647}
   priceTag: {fileID: 559482278}
@@ -1909,7 +1908,8 @@ AudioSource:
   m_GameObject: {fileID: 1954960170}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 8933694644086748021, guid: 1e21998a3c16e504a9273b44dcf6b608,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: cf96bb1c86544aa4dab815f9b075b9eb, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -2131,7 +2131,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 97bdd5ebc05fa714287df9b631c429a3, type: 3}
     m_FontSize: 14
     m_FontStyle: 1
     m_BestFit: 1

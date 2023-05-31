@@ -12,7 +12,7 @@ public class ShopController : MonoBehaviour
     int x;
 
     int Rockets;
-    public static bool[] buyed = new bool[4];
+    public static bool[] buyed = { true, false, false, false};
     public int[] price = new int[4];
 
     //Textovky
@@ -37,30 +37,11 @@ public class ShopController : MonoBehaviour
         if (Rockets == StatController.selected) { select.text = "Selected"; }
     }
 
-    private void Start()
-    {
-        //GetIfBuyed();
-    }
     private void Update()
     {
         cam.transform.position = Vector3.MoveTowards(cam.transform.position, new Vector3(x, 4, -11), Time.deltaTime * 100);
     }
 
-    /*public void GetIfBuyed()
-    {
-        if (PlayerPrefs.HasKey("Dual"))
-        {
-            buyed[1] = intToBool(PlayerPrefs.GetInt("Dual"));
-            buyed[2] = intToBool(PlayerPrefs.GetInt("Triple"));
-            buyed[3] = intToBool(PlayerPrefs.GetInt("Cannon"));
-        }
-    }*/
-    /*public void SaveAsBuyed()
-    {
-        PlayerPrefs.SetInt("Dual", boolToInt(buyed[1]));
-        PlayerPrefs.SetInt("Triple", boolToInt(buyed[2]));
-        PlayerPrefs.SetInt("Cannnon", boolToInt(buyed[3]));
-    }*/
     public void MoveLeft()
     {
         if (cam.transform.position.x == 0)

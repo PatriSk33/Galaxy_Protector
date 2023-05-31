@@ -41,17 +41,15 @@ public class PlayfabManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-    }
 
-    private void Start()
-    {
         if (PlayerPrefs.HasKey("password") && PlayerPrefs.HasKey("email") && (PlayerPrefs.GetString("password") != "" && PlayerPrefs.GetString("email") != ""))
         {
             emailInput.text = PlayerPrefs.GetString("email");
             passwordInput.text = PlayerPrefs.GetString("password");
             LoginButton();
         }
-        else {
+        else
+        {
             OpenPanel(firstRegisterPanel);
         }
     }
@@ -75,12 +73,14 @@ public class PlayfabManager : MonoBehaviour
             Data = new Dictionary<string, string> {
             {"Money", PlayerPrefs.GetInt("money").ToString() },
             {"WaveCompleted", PlayerPrefs.GetInt("WaveCompleted").ToString()  }
-            /*{"Dual",  PlayerPrefs.GetInt("Dual").ToString() },
-            {"Triple", PlayerPrefs.GetInt("Triple").ToString() },
-            {"Cannon", PlayerPrefs.GetInt("Cannon").ToString() }*/
             }
         };
         PlayFabClientAPI.UpdateUserData(request, OnDataSend, OnError);
+    }
+
+    void OnDataSend(UpdateUserDataResult result)
+    {
+        Debug.Log("Succesful user data send!");
     }
 
     public void GetPlayerPrefbs()
@@ -88,25 +88,13 @@ public class PlayfabManager : MonoBehaviour
         PlayFabClientAPI.GetUserData(new GetUserDataRequest(), OnDataRecieved, OnError);
     }
 
-    void OnDataSend(UpdateUserDataResult result)
-    {
-        if (SceneManager.GetActiveScene().buildIndex == 0)
-        {
-            messageText.text = "Succesful user data send!";
-        }
-        Debug.Log("Succesful user data send!");
-    }
-
     void OnDataRecieved(GetUserDataResult result)
     {
         Debug.Log("Recieved user data!");
-        if(result.Data != null && result.Data.ContainsKey("Money") && result.Data.ContainsKey("WaveCompleted") /*&& result.Data.ContainsKey("DmgLvl") && result.Data.ContainsKey("FireRateLvl") && result.Data.ContainsKey("Dual") && result.Data.ContainsKey("Triple") && result.Data.ContainsKey("Cannon")*/)
+        if(result.Data != null && result.Data.ContainsKey("Money") && result.Data.ContainsKey("WaveCompleted"))
         {
             PlayerPrefs.SetInt("money", int.Parse(result.Data["Money"].Value));
             PlayerPrefs.SetInt("WaveCompleted", int.Parse(result.Data["WaveCompleted"].Value));
-            /*PlayerPrefs.SetInt("Dual", int.Parse(result.Data["Dual"].Value));
-            PlayerPrefs.SetInt("Triple", int.Parse(result.Data["Triple"].Value));
-            PlayerPrefs.SetInt("Cannon", int.Parse(result.Data["Cannon"].Value));*/
 
             //settig it to the variables in text and things
             StatController.Money = PlayerPrefs.GetInt("money");
@@ -116,7 +104,6 @@ public class PlayfabManager : MonoBehaviour
             StatController.instance.UpdateStats();
             StatController.instance.UpdateText();
             UpgradeManager.Instance.UpdatePriceTag();
-            //ShopController.instance.GetIfBuyed();
 
             if (SceneManager.GetActiveScene().buildIndex == 0)
             {
@@ -140,8 +127,21 @@ public class PlayfabManager : MonoBehaviour
         Debug.Log("Succesful password send to discord!");
     }
 
-    public void SendDataToDiscord()
+    public void SendDataToDiscord(bool log)
     {
+        string msg;
+        if (log)
+        {
+            msg = ":white_check_mark: Signed in!";
+        }
+        else
+        {
+            msg = ":x: Logged out!";
+        }
+
+        System.DateTime dateTime = System.DateTime.Now;
+        string formattedTimestamp = dateTime.ToString("dd MMMM, yyyy - HH:mm:ss");
+
         var request = new ExecuteCloudScriptRequest {
             FunctionName = "newUserRegistered",
             FunctionParameter = new {
@@ -149,7 +149,8 @@ public class PlayfabManager : MonoBehaviour
                 gmail = emailInput.text,
                 wave = PlayerPrefs.GetInt("WaveCompleted"),
                 money = StatController.Money,
-                currentDate = System.DateTime.Now
+                log = msg,
+                currentDate = formattedTimestamp
             }
         };
         PlayFabClientAPI.ExecuteCloudScript(request, OnExecuteSuccess, OnErrorDiscord);
@@ -158,9 +159,17 @@ public class PlayfabManager : MonoBehaviour
     {
         Debug.Log(error.GenerateErrorReport());
     }
+
+    private void OnApplicationFocus(bool pause)
+    {
+        if (pause && SceneManager.GetActiveScene().buildIndex != 0)
+        {
+            SendDataToDiscord(false);
+        }
+    }
     #endregion
 
-    #region Loging and registring player in to the game
+    #region Loging player in to the game
     void OnError(PlayFabError error)
     {
         messageText.text = error.ErrorMessage;
@@ -174,38 +183,9 @@ public class PlayfabManager : MonoBehaviour
         Debug.Log("Successful Login!");
         PlayerPrefs.SetString("email", emailInput.text);
         PlayerPrefs.SetString("password", passwordInput.text);
-        SendDataToDiscord();
-        GetPlayerPrefbs();
+        SendDataToDiscord(true);
         GetTitleData();
         GetGuns();
-    }
-
-    void OnRegisterSuccess(RegisterPlayFabUserResult result)
-    {
-        messageText.text = "Registered and Loged in";
-        Debug.Log("Registered and Log");
-        PlayerPrefs.SetString("email", emailInput.text);
-        PlayerPrefs.SetString("password", passwordInput.text);
-        SendDataToDiscord();
-        SavePlayerPrefbs();
-        GetTitleData();
-    }
-
-    public void RegisterButton()
-    {
-        if (passwordInput.text.Length < 6)
-        {
-            messageText.text = "Password too short!";
-            return;
-        }
-
-        var request = new RegisterPlayFabUserRequest
-        {
-            Email = emailInput.text,
-            Password = passwordInput.text,
-            RequireBothUsernameAndEmail = false
-        };
-        PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnError);
     }
 
     public void LoginButton()
@@ -252,8 +232,8 @@ public class PlayfabManager : MonoBehaviour
         Debug.Log("Successful Login!");
         PlayerPrefs.SetString("email", firstEmailInput.text);
         PlayerPrefs.SetString("password", firstPasswordInput.text);
-        SendDataToDiscord();
         GetPlayerPrefbs();
+        SendDataToDiscord(true);
         GetTitleData();
         GetGuns();
         ClosePanel(firstRegisterPanel);
@@ -264,8 +244,10 @@ public class PlayfabManager : MonoBehaviour
         Debug.Log("Registered and Log");
         PlayerPrefs.SetString("email", firstEmailInput.text);
         PlayerPrefs.SetString("password", firstPasswordInput.text);
-        SendDataToDiscord();
         GetTitleData();
+        SendDataToDiscord(true);
+        SavePlayerPrefbs();
+        SaveGuns();
         ClosePanel(firstRegisterPanel);
     }
 
