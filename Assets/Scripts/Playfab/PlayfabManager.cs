@@ -25,6 +25,10 @@ public class PlayfabManager : MonoBehaviour
     public InputField firstPasswordInput;
     public Text firstMessageText;
 
+    [Header("Feedback")]
+    public InputField feedbackMessage;
+    public GameObject feedbackPanel;
+
     private void Awake()
     {
         if (Instance == null)
@@ -276,8 +280,34 @@ public class PlayfabManager : MonoBehaviour
     }
     #endregion
 
+    #region Feedback
+    public void SendFeedback()
+    {
+        var request = new ExecuteCloudScriptRequest
+        {
+            FunctionName = "sendFeedback",
+            FunctionParameter = new
+            {
+                message = feedbackMessage.text,
+                displayName = PlayerPrefs.GetString("displayName"),
+                currentDate = System.DateTime.Now
+            }
+        };
+        PlayFabClientAPI.ExecuteCloudScript(request, OnFeedbackSuccess, OnErrorDiscord);
+    }
+
+    void OnFeedbackSuccess(ExecuteCloudScriptResult result)
+    {
+        Debug.Log("Succesful Feedback sent!");
+        ClosePanel(feedbackPanel);
+    }
+    #endregion
+
     #region Title Data
     //Title data setter (message of the day)
+    [Header("Not upto Date")]
+    public GameObject notUpToDatePanel;
+
     public void GetTitleData()
     {
         PlayFabClientAPI.GetTitleData(new GetTitleDataRequest(), OnTitleDataRecieved, OnError);
@@ -292,6 +322,10 @@ public class PlayfabManager : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             msgOfTheDay.text = result.Data["Message"];
+        }
+        if(Application.version != result.Data["Version"])
+        {
+            OpenPanel(notUpToDatePanel);
         }
     }
 #endregion

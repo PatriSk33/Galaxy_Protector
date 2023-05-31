@@ -39,7 +39,8 @@ public class StatController : MonoBehaviour
     public GameObject finishedScreen;
     public bool finished;
 
-    public PlayfabManager playfabManager;
+    //Feedback
+    public static int timesPlayed;
 
     //Stats for Guns
     [SerializeField]private float[] startingDamage, startingFireRate;
@@ -50,6 +51,7 @@ public class StatController : MonoBehaviour
 
         Money = PlayerPrefs.GetInt("money", 0);
         WaveCompleted = PlayerPrefs.GetInt("WaveCompleted", 1);
+        timesPlayed = PlayerPrefs.GetInt("timesPlayed", 0);
         selected = PlayerPrefs.GetInt("selected", 0);
     }
 
@@ -57,6 +59,10 @@ public class StatController : MonoBehaviour
     {
         //---------------------------------Cheats----------------------------//
         //Money = 5000;
+
+
+        //Show feedback panel
+        if (timesPlayed % 7 == 0 && timesPlayed > 0) { PlayfabManager.Instance.OpenPanel(PlayfabManager.Instance.feedbackPanel); }
 
         //Health
         CheckMaximumHP();
@@ -103,6 +109,7 @@ public class StatController : MonoBehaviour
         PlayerPrefs.SetInt("WaveCompleted", WaveCompleted);
         PlayerPrefs.SetInt("money", Money);
         PlayerPrefs.SetInt("selected", selected);
+        PlayerPrefs.SetInt("timesPlayed", timesPlayed);
         if (PlayerPrefs.HasKey("password") && PlayerPrefs.HasKey("email"))
         {
             PlayfabManager.Instance.SavePlayerPrefbs();
