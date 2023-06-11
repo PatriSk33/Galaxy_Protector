@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ShopController : MonoBehaviour
 {
     public static ShopController instance;
+
     public Camera cam;
     int x;
 
@@ -16,25 +13,23 @@ public class ShopController : MonoBehaviour
     public int[] price = new int[4];
 
     //Textovky
-    public Text select, priceTag;
+    public Text selectButtonText, priceTag;
     public Button buyButton;
     public Button selectButton;
 
     //Audio
     public AudioSource notEnoughMoneySound;
 
-    //When run get the instance and then go to main menu
-    public static bool alreadyStarted;
-
     private void Awake()
     {
         instance = this;
 
         Rockets = 0;
+        x = 0;
         priceTag.gameObject.SetActive(false);
         buyButton.gameObject.SetActive(false);
-        
-        if (Rockets == StatController.selected) { select.text = "Selected"; }
+
+        selectButtonText.text = (Rockets == StatController.selected) ? "Selected" : "Select";
     }
 
     private void Update()
@@ -53,8 +48,8 @@ public class ShopController : MonoBehaviour
                 buyButton.gameObject.SetActive(false);
                 selectButton.gameObject.SetActive(true);
                 priceTag.gameObject.SetActive(false);
-                if (Rockets == StatController.selected) { select.text = "Selected"; }
-                else { select.text = "Select"; }
+                if (Rockets == StatController.selected) { selectButtonText.text = "Selected"; }
+                else { selectButtonText.text = "Select"; }
             }
             else 
             { 
@@ -72,8 +67,8 @@ public class ShopController : MonoBehaviour
             {
                 buyButton.gameObject.SetActive(false);
                 selectButton.gameObject.SetActive(true);
-                if (Rockets == StatController.selected) { select.text = "Selected"; }
-                else { select.text = "Select"; }
+                if (Rockets == StatController.selected) { selectButtonText.text = "Selected"; }
+                else { selectButtonText.text = "Select"; }
                 priceTag.gameObject.SetActive(false);
             }
             else 
@@ -85,6 +80,7 @@ public class ShopController : MonoBehaviour
             }
         }
     }
+
     public void MoveRight()
     {
         if (cam.transform.position.x == 45)
@@ -103,8 +99,8 @@ public class ShopController : MonoBehaviour
             {
                 buyButton.gameObject.SetActive(false);
                 selectButton.gameObject.SetActive(true);
-                if (Rockets == StatController.selected) { select.text = "Selected"; }
-                else { select.text = "Select"; }
+                if (Rockets == StatController.selected) { selectButtonText.text = "Selected"; }
+                else { selectButtonText.text = "Select"; }
                 priceTag.gameObject.SetActive(false);
             }
             else 
@@ -120,36 +116,39 @@ public class ShopController : MonoBehaviour
 
     public void BuyNow()
     {
-        if (StatController.Money < price[Rockets])
+        if (PlayfabManager.clientConnected)
         {
-            Debug.Log("Not enough money...");
-            notEnoughMoneySound.Play();
-            return;
-        }
+            if (StatController.Money < price[Rockets])
+            {
+                Debug.Log("Not enough money...");
+                notEnoughMoneySound.Play();
+                return;
+            }
 
-        if (Rockets == 1 || buyed[Rockets - 1])
-        {
-            buyed[Rockets] = true;
-            StatController.Money -= price[Rockets];
-            
-            buyButton.gameObject.SetActive(false);
-            selectButton.gameObject.SetActive(true);
-            priceTag.gameObject.SetActive(false);
-            select.text = "Select";
-            
-            //SaveAsBuyed();
-            StatController.instance.Save();
-            PlayfabManager.Instance.SaveGuns();
+            if (Rockets == 1 || buyed[Rockets - 1])
+            {
+                buyed[Rockets] = true;
+                StatController.Money -= price[Rockets];
 
-            LevelPlayAds.Instance.ShowFullSizeAd();
+                buyButton.gameObject.SetActive(false);
+                selectButton.gameObject.SetActive(true);
+                priceTag.gameObject.SetActive(false);
+                selectButtonText.text = "Select";
+
+                StatController.instance.Save();
+                PlayfabManager.Instance.SaveGuns();
+
+                LevelPlayAds.Instance.ShowFullSizeAd();
+            }
         }
     }
+
     public void Select()
     {
         if (buyed[Rockets]) 
         { 
             StatController.selected = Rockets;
-            select.text = "Selected";
+            selectButtonText.text = "Selected";
             StatController.instance.Save();
             StatController.instance.UpdateStats();
         }
@@ -157,21 +156,5 @@ public class ShopController : MonoBehaviour
         {
             Debug.Log("You don't own it");
         }
-    }
-
-    int boolToInt(bool val)
-    {
-        if (val)
-            return 1;
-        else
-            return 0;
-    }
-
-    bool intToBool(int val)
-    {
-        if (val != 0)
-            return true;
-        else
-            return false;
     }
 }

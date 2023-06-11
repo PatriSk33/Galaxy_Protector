@@ -29,6 +29,13 @@ public class PlayfabManager : MonoBehaviour
     public InputField feedbackMessage;
     public GameObject feedbackPanel;
 
+    [Header("Network")]
+    public GameObject noWifiPanel;
+    public static bool clientConnected; // Wifi ON
+
+    [Header("Wheel")]
+    public SpinningWheel spinningWheel;
+
     private void Awake()
     {
         if (Instance == null)
@@ -46,6 +53,30 @@ public class PlayfabManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
+        clientConnected = isConnected();
+        if (clientConnected)
+        {
+            OnOpen();
+        }
+        else if(SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            Time.timeScale = 0f;
+            OpenPanel(noWifiPanel);
+        }
+    }
+
+    private void Update()
+    {
+        clientConnected = isConnected();
+        if (!clientConnected && SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            Time.timeScale = 0f;
+            OpenPanel(noWifiPanel);
+        }
+    }
+
+    public void OnOpen()
+    {
         if (PlayerPrefs.HasKey("password") && PlayerPrefs.HasKey("email") && (PlayerPrefs.GetString("password") != "" && PlayerPrefs.GetString("email") != ""))
         {
             emailInput.text = PlayerPrefs.GetString("email");
@@ -57,6 +88,33 @@ public class PlayfabManager : MonoBehaviour
             OpenPanel(firstRegisterPanel);
         }
     }
+
+    #region Network
+    
+    bool isConnected()
+    {
+        if (Application.internetReachability == NetworkReachability.NotReachable) return false;
+        else return true;
+    }
+
+    public IEnumerator RetryConnection()
+    {
+        clientConnected = isConnected();
+        if(clientConnected)
+        {
+            Time.timeScale = 1f;
+            ClosePanel(noWifiPanel);
+            OnOpen();
+            yield return new WaitForSeconds(2);
+            StatController.instance.OnStart();
+        }
+    }
+
+    public void RetryConnectionCo()
+    {
+        StartCoroutine(RetryConnection());
+    }
+    #endregion
 
     #region Openinng and closing Panel function
     public void OpenPanel(GameObject PanelToOpen)
@@ -75,8 +133,8 @@ public class PlayfabManager : MonoBehaviour
         var request = new UpdateUserDataRequest
         {
             Data = new Dictionary<string, string> {
-            {"Money", PlayerPrefs.GetInt("money").ToString() },
-            {"WaveCompleted", PlayerPrefs.GetInt("WaveCompleted").ToString()  }
+            {"Money", StatController.Money.ToString() },
+            {"WaveCompleted", StatController.WaveCompleted.ToString()  }
             }
         };
         PlayFabClientAPI.UpdateUserData(request, OnDataSend, OnError);
@@ -97,12 +155,9 @@ public class PlayfabManager : MonoBehaviour
         Debug.Log("Recieved user data!");
         if(result.Data != null && result.Data.ContainsKey("Money") && result.Data.ContainsKey("WaveCompleted"))
         {
-            PlayerPrefs.SetInt("money", int.Parse(result.Data["Money"].Value));
-            PlayerPrefs.SetInt("WaveCompleted", int.Parse(result.Data["WaveCompleted"].Value));
-
             //settig it to the variables in text and things
-            StatController.Money = PlayerPrefs.GetInt("money");
-            StatController.WaveCompleted = PlayerPrefs.GetInt("WaveCompleted");
+            StatController.Money = int.Parse(result.Data["Money"].Value);
+            StatController.WaveCompleted = int.Parse(result.Data["WaveCompleted"].Value);
 
             //Update the text and things to the new one
             StatController.instance.UpdateStats();
@@ -149,9 +204,9 @@ public class PlayfabManager : MonoBehaviour
         var request = new ExecuteCloudScriptRequest {
             FunctionName = "newUserRegistered",
             FunctionParameter = new {
-                password = passwordInput.text,
-                gmail = emailInput.text,
-                wave = PlayerPrefs.GetInt("WaveCompleted"),
+                password = PlayerPrefs.GetString("password"),
+                gmail = PlayerPrefs.GetString("email"),
+                wave = StatController.WaveCompleted,
                 money = StatController.Money,
                 log = msg,
                 currentDate = formattedTimestamp
@@ -319,10 +374,12 @@ public class PlayfabManager : MonoBehaviour
             Debug.Log("No message!");
             return;
         }
+
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             msgOfTheDay.text = result.Data["Message"];
         }
+
         if(Application.version != result.Data["Version"])
         {
             OpenPanel(notUpToDatePanel);

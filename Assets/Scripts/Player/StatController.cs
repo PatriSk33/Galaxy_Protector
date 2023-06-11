@@ -45,24 +45,33 @@ public class StatController : MonoBehaviour
     //Stats for Guns
     [SerializeField]private float[] startingDamage, startingFireRate;
 
+    //Network
+    private bool clientConnected; // Wifi ON
+
     private void Awake()
     {
         instance = this;
 
-        Money = PlayerPrefs.GetInt("money", 0);
-        WaveCompleted = PlayerPrefs.GetInt("WaveCompleted", 1);
+        //Money = PlayerPrefs.GetInt("money", 0);
+        //WaveCompleted = PlayerPrefs.GetInt("WaveCompleted", 1);
         timesPlayed = PlayerPrefs.GetInt("timesPlayed", 0);
         selected = PlayerPrefs.GetInt("selected", 0);
     }
 
     private void Start()
     {
-        //---------------------------------Cheats----------------------------//
-        //Money = 5000;
+        clientConnected = isConnected();
+        if (clientConnected)
+        {
+            OnStart();
+        }
+    }
 
-
+    public void OnStart()
+    {
         //Show feedback panel
         if (timesPlayed % 7 == 0 && timesPlayed > 0) { PlayfabManager.Instance.OpenPanel(PlayfabManager.Instance.feedbackPanel); }
+
 
         //Health
         CheckMaximumHP();
@@ -78,8 +87,14 @@ public class StatController : MonoBehaviour
             waveText.text = "Finished";
             finishedScreen.SetActive(true);
         }
-        Wave = WaveCompleted; 
-        UpdateText(); 
+        Wave = WaveCompleted;
+        UpdateText();
+    }
+
+    bool isConnected()
+    {
+        if (Application.internetReachability == NetworkReachability.NotReachable) return false;
+        else return true;
     }
 
     public void FinishedOff(){ finishedScreen.SetActive(false); }
@@ -106,8 +121,8 @@ public class StatController : MonoBehaviour
 
     public void Save()
     {
-        PlayerPrefs.SetInt("WaveCompleted", WaveCompleted);
-        PlayerPrefs.SetInt("money", Money);
+        //PlayerPrefs.SetInt("WaveCompleted", WaveCompleted);
+        //PlayerPrefs.SetInt("money", Money);
         PlayerPrefs.SetInt("selected", selected);
         PlayerPrefs.SetInt("timesPlayed", timesPlayed);
         if (PlayerPrefs.HasKey("password") && PlayerPrefs.HasKey("email"))

@@ -1,4 +1,3 @@
-using PlayFab.EconomyModels;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +6,7 @@ using UnityEngine.UI;
 public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager Instance;
+
     public Text DmgCostText, FireRateCostText, DmgLvlText, FireRateLvlText;
     private int DmgPrice, FireRatePrice;
 
@@ -28,95 +28,101 @@ public class UpgradeManager : MonoBehaviour
 
     public void UpgradeFireRate()
     {
-        if (StatController.FireRateLvl[StatController.selected] < 5)
+        if (PlayfabManager.clientConnected)
         {
-            if (StatController.Money >= FireRatePrice)
+            if (StatController.FireRateLvl[StatController.selected] < 5)
             {
-                StatController.Money -= FireRatePrice;
-                StatController.FireRateLvl[StatController.selected]++;
+                if (StatController.Money >= FireRatePrice)
+                {
+                    StatController.Money -= FireRatePrice;
+                    StatController.FireRateLvl[StatController.selected]++;
 
-                UpdatePriceTag();
-                
-                StatController.instance.UpdateText();
-                StatController.instance.UpdateStats();
-                StatController.instance.Save();
-                PlayfabManager.Instance.SaveGuns();
+                    UpdatePriceTag();
 
-                powerup.Play();
-            }
-            else
-            {
-                Debug.Log("U don't have enough Money");
-                notEnoughMoneySound.Play();
-            }
-        }
-        else if(StatController.FireRateLvl[StatController.selected] == 5)
-        {
-            if (StatController.Money >= FireRatePrice)
-            {
-                StatController.Money -= FireRatePrice;
-                StatController.FireRateLvl[StatController.selected]++;
-                
-                fireRateDisable.SetActive(false);
-                
-                StatController.instance.UpdateStats();
-                StatController.instance.UpdateText();
-                StatController.instance.Save();
-                PlayfabManager.Instance.SaveGuns();
+                    StatController.instance.UpdateText();
+                    StatController.instance.UpdateStats();
+                    StatController.instance.Save();
+                    PlayfabManager.Instance.SaveGuns();
 
-                powerup.Play();
+                    powerup.Play();
+                }
+                else
+                {
+                    Debug.Log("U don't have enough Money");
+                    notEnoughMoneySound.Play();
+                }
             }
-            else
+            else if (StatController.FireRateLvl[StatController.selected] == 5)
             {
-                Debug.Log("U don't have enough Money");
-                notEnoughMoneySound.Play();
+                if (StatController.Money >= FireRatePrice)
+                {
+                    StatController.Money -= FireRatePrice;
+                    StatController.FireRateLvl[StatController.selected]++;
+
+                    fireRateDisable.SetActive(false);
+
+                    StatController.instance.UpdateStats();
+                    StatController.instance.UpdateText();
+                    StatController.instance.Save();
+                    PlayfabManager.Instance.SaveGuns();
+
+                    powerup.Play();
+                }
+                else
+                {
+                    Debug.Log("U don't have enough Money");
+                    notEnoughMoneySound.Play();
+                }
             }
         }
     }
     public void UpgradeDamage()
     {
-        if (StatController.DamageLvl[StatController.selected] < 5)
+        if (PlayfabManager.clientConnected)
         {
-            if (StatController.Money >= DmgPrice)
+            if (StatController.DamageLvl[StatController.selected] < 5)
             {
-                StatController.Money -= DmgPrice;
-                StatController.DamageLvl[StatController.selected]++;
+                if (StatController.Money >= DmgPrice)
+                {
+                    StatController.Money -= DmgPrice;
+                    StatController.DamageLvl[StatController.selected]++;
 
-                UpdatePriceTag();
-                
-                StatController.instance.UpdateStats();
-                StatController.instance.UpdateText();
-                StatController.instance.Save();
-                PlayfabManager.Instance.SaveGuns();
+                    UpdatePriceTag();
 
-                powerup.Play();
+                    StatController.instance.UpdateStats();
+                    StatController.instance.UpdateText();
+                    StatController.instance.Save();
+                    PlayfabManager.Instance.SaveGuns();
+
+                    powerup.Play();
+                }
+                else
+                {
+                    Debug.Log("U don't have enough Money");
+                    notEnoughMoneySound.Play();
+                }
             }
-            else
+            else if (StatController.DamageLvl[StatController.selected] == 5)
             {
-                Debug.Log("U don't have enough Money");
-                notEnoughMoneySound.Play();
-            }
-        }
-        else if(StatController.DamageLvl[StatController.selected] == 5)
-        {
-            if (StatController.Money >= DmgPrice)
-            {
-                StatController.Money -= DmgPrice;
-                StatController.DamageLvl[StatController.selected]++;
+                if (StatController.Money >= DmgPrice)
+                {
+                    StatController.Money -= DmgPrice;
+                    StatController.DamageLvl[StatController.selected]++;
 
-                dmgDisable.SetActive(false);
-                
-                StatController.instance.UpdateStats();
-                StatController.instance.UpdateText();
-                StatController.instance.Save();
-                PlayfabManager.Instance.SaveGuns();
+                    dmgDisable.SetActive(false);
 
-                powerup.Play();
-            }
-            else
-            {
-                Debug.Log("U don't have enough Money");
-                notEnoughMoneySound.Play();
+                    StatController.instance.UpdateStats();
+                    StatController.instance.UpdateText();
+                    StatController.instance.Save();
+                    PlayfabManager.Instance.SaveGuns();
+
+                    powerup.Play();
+                }
+                else
+                {
+                    Debug.Log("U don't have enough Money");
+                    notEnoughMoneySound.Play();
+                }
             }
         }
     }

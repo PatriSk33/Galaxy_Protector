@@ -83,8 +83,6 @@ public class GameplayUIButtons : MonoBehaviour
         AfterGameController.instance.ShowPanel();
     }
 
-
-
     public void DoubleMoneyAd()
     {
         LevelPlayAds.Instance.ShowRewardedAd("Double_Money");
