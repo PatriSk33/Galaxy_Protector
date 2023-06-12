@@ -56,6 +56,11 @@ public class StatController : MonoBehaviour
         //WaveCompleted = PlayerPrefs.GetInt("WaveCompleted", 1);
         timesPlayed = PlayerPrefs.GetInt("timesPlayed", 0);
         selected = PlayerPrefs.GetInt("selected", 0);
+        
+        if(WaveCompleted <= 0)
+        {
+        WaveCompleted = 1;
+        }
     }
 
     private void Start()
