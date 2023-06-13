@@ -13,7 +13,7 @@ public class ColorSelector : MonoBehaviour
 
     public void Start()
     {
-        if (unlockableWave >= StatController.WaveCompleted && lockIcon != null)
+        if (unlockableWave <= StatController.WaveCompleted && lockIcon != null)
         {
             lockIcon.gameObject.SetActive(false);
         }
