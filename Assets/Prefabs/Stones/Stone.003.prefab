@@ -99,6 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 5
+  shakeDuration: 0.2
+  shakeIntensity: 0.5
 --- !u!54 &-1449765050912524220
 Rigidbody:
   m_ObjectHideFlags: 0

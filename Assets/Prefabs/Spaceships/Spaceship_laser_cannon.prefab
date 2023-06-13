@@ -145,7 +145,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -3846018093981099296, guid: d2110e094dba92b47b4a9008b1c20f33, type: 3}
+  - {fileID: 2100000, guid: 77f80e0eb968f6f46bb1ed850157d077, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -228,7 +228,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -3846018093981099296, guid: d2110e094dba92b47b4a9008b1c20f33, type: 3}
+  - {fileID: 2100000, guid: 77f80e0eb968f6f46bb1ed850157d077, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -498,9 +498,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfbadcc05f76d474a9a5e3b1c1f76612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 0
-  bulletPrefab: {fileID: 8212551806542911532, guid: 55464a076065d364d993c9f562a3c9ba,
-    type: 3}
   LaserSpaceship: 0
   spawnpoints: []
-  shootSound: {fileID: 0}
+  bulletPrefab: {fileID: 8212551806542911532, guid: 55464a076065d364d993c9f562a3c9ba,
+    type: 3}
+  audioSource: {fileID: 0}
+  shootSounds: []

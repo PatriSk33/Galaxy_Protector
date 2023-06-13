@@ -6,17 +6,19 @@ using UnityEngine;
 public class GoForward : MonoBehaviour
 {
     private float lifeTime = 3;
-    [HideInInspector]public float bulletHealth = 2;
     public bool isPlayerBullet, isBossBullet;
+    [HideInInspector] public float bulletHealth = 2;
     [HideInInspector]public float damage;   // Enemy Damage
 
-    [Serializable]
-    public struct HomingBullet
+    [Serializable] public struct HomingBullet
     {
         public bool isHoming;
         public float range;
     }
     public HomingBullet HM;
+
+    [Header("Effects")]
+    public GameObject explosion;
 
     private void Start()
     {
@@ -63,10 +65,14 @@ public class GoForward : MonoBehaviour
             StatController.Health -= damage;
             if (StatController.Health <= 0 && GameplayUIButtons.instance.canRevive)
             {
+                Instantiate(explosion, transform.position, transform.rotation);
+                col.gameObject.SetActive(false);
                 GameplayUIButtons.instance.OpenRevivePanel();
             }
             else if (StatController.Health <= 0 && !GameplayUIButtons.instance.canRevive)
             {
+                Instantiate(explosion, transform.position, transform.rotation);
+                col.gameObject.SetActive(false);
                 GameplayUIButtons.instance.OpenAfterGame();
             }
 

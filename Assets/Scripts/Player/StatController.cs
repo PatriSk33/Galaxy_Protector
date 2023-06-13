@@ -34,6 +34,8 @@ public class StatController : MonoBehaviour
     public static int[] FireRateLvl = new int[4]; // fire rate lvl for each gun separately
     public static int[] DamageLvl = new int[4]; // damage lvl for each gun separately
 
+    //Enemies Killed (Leaderboard)
+    public static int enemiesKilled;
 
     //Finished
     public GameObject finishedScreen;
@@ -59,7 +61,7 @@ public class StatController : MonoBehaviour
         
         if(WaveCompleted <= 0)
         {
-        WaveCompleted = 1;
+            WaveCompleted = 1;
         }
     }
 
@@ -79,7 +81,7 @@ public class StatController : MonoBehaviour
 
 
         //Health
-        CheckMaximumHP();
+        SetMaximumHP();
         Health = MaxHealth;
 
         UpdateStats();
@@ -160,7 +162,7 @@ public class StatController : MonoBehaviour
 
 
     private static readonly float[] maxHealthValues = { 20f, 60f, 100f, 150f};
-    private void CheckMaximumHP()
+    private void SetMaximumHP()
     {
         int selectedValue = Mathf.Clamp(selected, 0, maxHealthValues.Length - 1);
         MaxHealth = maxHealthValues[selectedValue];

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GridBrushBase;
 
 public class AsteroidMovement : MonoBehaviour
 {
@@ -13,9 +12,18 @@ public class AsteroidMovement : MonoBehaviour
     private float maxSpeed = 10f;
     private float rotationSpeed;
 
+    //Camera Shake
+    public float shakeDuration = 0.2f;
+    public float shakeIntensity = 0.1f;
+
+    private Camera mainCamera;
+    private Vector3 originalCameraPosition;
+    private bool isShaking = false;
+
 
     void Start()
     {
+        mainCamera = Camera.main;
         rotationSpeed = Random.Range(minSpeed, maxSpeed);
         rotationDirection = new Vector3(Random.Range(0,100), Random.Range(0, 100), Random.Range(0, 100));
     }
@@ -39,6 +47,12 @@ public class AsteroidMovement : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             SoundManager.instance.PlayOnPlayerHit(); //Player got hit sound
+            
+            //Shake camera
+            if (!isShaking)
+            {
+                StartCoroutine(ShakeCamera());
+            }
 
             //Damage player
             StatController.Health -= damage;
@@ -47,7 +61,26 @@ public class AsteroidMovement : MonoBehaviour
                 GameplayUIButtons.instance.OpenRevivePanel();
             }
             
-            Destroy(gameObject);
+            Destroy(gameObject); //Destory Asteroid
         }
+    }
+
+    private IEnumerator ShakeCamera()
+    {
+        isShaking = true;
+
+        originalCameraPosition = mainCamera.transform.position;
+        float timeElapsed = 0f;
+
+        while (timeElapsed < shakeDuration)
+        {
+            Vector3 randomOffset = Random.insideUnitSphere * shakeIntensity;
+            mainCamera.transform.position = originalCameraPosition + randomOffset;
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        mainCamera.transform.position = originalCameraPosition;
+        isShaking = false;
     }
 }

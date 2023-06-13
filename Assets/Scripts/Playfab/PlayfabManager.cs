@@ -14,6 +14,7 @@ public class PlayfabManager : MonoBehaviour
     [Header("Input fields")]
     public InputField emailInput;
     public InputField passwordInput;
+    public InputField NameInput;
 
     [Header("Text")]
     public Text messageText;
@@ -23,6 +24,7 @@ public class PlayfabManager : MonoBehaviour
     public GameObject firstRegisterPanel;
     public InputField firstEmailInput;
     public InputField firstPasswordInput;
+    public InputField firstNameInput;
     public Text firstMessageText;
 
     [Header("Feedback")]
@@ -35,6 +37,11 @@ public class PlayfabManager : MonoBehaviour
 
     [Header("Wheel")]
     public SpinningWheel spinningWheel;
+
+    [Header("No Name")]
+    public GameObject DisplayNamePanel;
+    public InputField NoNameInput;
+    public Text NoMessageText;
 
     private void Awake()
     {
@@ -81,6 +88,7 @@ public class PlayfabManager : MonoBehaviour
         {
             emailInput.text = PlayerPrefs.GetString("email");
             passwordInput.text = PlayerPrefs.GetString("password");
+            NameInput.text = PlayerPrefs.GetString("displayName");
             LoginButton();
         }
         else
@@ -134,7 +142,9 @@ public class PlayfabManager : MonoBehaviour
         {
             Data = new Dictionary<string, string> {
             {"Money", StatController.Money.ToString() },
-            {"WaveCompleted", StatController.WaveCompleted.ToString()  }
+            {"WaveCompleted", StatController.WaveCompleted.ToString()  },
+            {"EnemiesKilled", StatController.enemiesKilled.ToString() },
+            {"hexSetterBought", PlayerPrefs.GetInt("hexSetterBought").ToString() }
             }
         };
         PlayFabClientAPI.UpdateUserData(request, OnDataSend, OnError);
@@ -143,6 +153,7 @@ public class PlayfabManager : MonoBehaviour
     void OnDataSend(UpdateUserDataResult result)
     {
         Debug.Log("Succesful user data send!");
+        SendLeaderboard();
     }
 
     public void GetPlayerPrefbs()
@@ -153,11 +164,15 @@ public class PlayfabManager : MonoBehaviour
     void OnDataRecieved(GetUserDataResult result)
     {
         Debug.Log("Recieved user data!");
-        if(result.Data != null && result.Data.ContainsKey("Money") && result.Data.ContainsKey("WaveCompleted"))
+        if(result.Data != null && result.Data.ContainsKey("Money") && result.Data.ContainsKey("WaveCompleted") && result.Data.ContainsKey("EnemiesKilled") && result.Data.ContainsKey("hexSetterBought"))
         {
             //settig it to the variables in text and things
             StatController.Money = int.Parse(result.Data["Money"].Value);
             StatController.WaveCompleted = int.Parse(result.Data["WaveCompleted"].Value);
+            StatController.enemiesKilled = int.Parse(result.Data["EnemiesKilled"].Value);
+            PlayerPrefs.SetInt("hexSetterBought", int.Parse(result.Data["hexSetterBought"].Value));
+
+            StatController.Wave = StatController.WaveCompleted;
 
             //Update the text and things to the new one
             StatController.instance.UpdateStats();
@@ -204,8 +219,9 @@ public class PlayfabManager : MonoBehaviour
         var request = new ExecuteCloudScriptRequest {
             FunctionName = "newUserRegistered",
             FunctionParameter = new {
-                password = PlayerPrefs.GetString("password"),
+                displayName = PlayerPrefs.GetString("displayName"),
                 gmail = PlayerPrefs.GetString("email"),
+                password = PlayerPrefs.GetString("password"),
                 wave = StatController.WaveCompleted,
                 money = StatController.Money,
                 log = msg,
@@ -235,16 +251,26 @@ public class PlayfabManager : MonoBehaviour
         Debug.Log(error.GenerateErrorReport());
     }
 
-
     void OnLoginSuccess(LoginResult result)
     {
+        loggedInPlayfabID = result.PlayFabId;
         messageText.text = "Logged in!";
         Debug.Log("Successful Login!");
         PlayerPrefs.SetString("email", emailInput.text);
         PlayerPrefs.SetString("password", passwordInput.text);
+        PlayerPrefs.SetString("displayName", NameInput.text);
+        GetPlayerPrefbs();
         SendDataToDiscord(true);
         GetTitleData();
         GetGuns();
+        if (result.InfoResultPayload.PlayerProfile != null)
+        {
+            name = result.InfoResultPayload.PlayerProfile.DisplayName;
+        }
+        if (name == null)
+        {
+            OpenPanel(DisplayNamePanel);
+        }
     }
 
     public void LoginButton()
@@ -252,7 +278,11 @@ public class PlayfabManager : MonoBehaviour
         var request = new LoginWithEmailAddressRequest
         {
             Email = emailInput.text,
-            Password = passwordInput.text
+            Password = passwordInput.text,
+            InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
+            {
+                GetPlayerProfile = true
+            }
         };
         PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnError);
     }
@@ -267,8 +297,20 @@ public class PlayfabManager : MonoBehaviour
             return;
         }
 
+        if (firstNameInput.text.Length < 3)
+        {
+            firstMessageText.text = "Display Name too short!";
+            return;
+        }
+        if (firstNameInput.text.Length >= 18)
+        {
+            firstMessageText.text = "Display Name too long!";
+            return;
+        }
+
         var request = new RegisterPlayFabUserRequest
         {
+            DisplayName = firstNameInput.text,
             Email = firstEmailInput.text,
             Password = firstPasswordInput.text,
             RequireBothUsernameAndEmail = false
@@ -282,27 +324,43 @@ public class PlayfabManager : MonoBehaviour
         {
             Email = firstEmailInput.text,
             Password = firstPasswordInput.text,
+            InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
+            {
+                GetPlayerProfile = true
+            }
         };
         PlayFabClientAPI.LoginWithEmailAddress(request, OnFirstLoginSuccess, OnFirstError);
     }
 
     void OnFirstLoginSuccess(LoginResult result)
     {
+        loggedInPlayfabID = result.PlayFabId;
         Debug.Log("Successful Login!");
         PlayerPrefs.SetString("email", firstEmailInput.text);
         PlayerPrefs.SetString("password", firstPasswordInput.text);
+        PlayerPrefs.SetString("displayName", firstNameInput.text);
         GetPlayerPrefbs();
         SendDataToDiscord(true);
         GetTitleData();
         GetGuns();
         ClosePanel(firstRegisterPanel);
+        if (result.InfoResultPayload.PlayerProfile != null)
+        {
+            name = result.InfoResultPayload.PlayerProfile.DisplayName;
+        }
+        if (name == null)
+        {
+            OpenPanel(DisplayNamePanel);
+        }
     }
 
     void OnFirstRegisterSuccess(RegisterPlayFabUserResult result)
     {
+        loggedInPlayfabID = result.PlayFabId;
         Debug.Log("Registered and Log");
         PlayerPrefs.SetString("email", firstEmailInput.text);
         PlayerPrefs.SetString("password", firstPasswordInput.text);
+        PlayerPrefs.SetString("displayName", firstNameInput.text);
         GetTitleData();
         SendDataToDiscord(true);
         SavePlayerPrefbs();
@@ -335,6 +393,131 @@ public class PlayfabManager : MonoBehaviour
     }
     #endregion
 
+    #region Leaderboard
+    [Header("Leaderboard")]
+    public GameObject rowPrefab;
+    public Transform rowsParent;
+    string loggedInPlayfabID;
+
+    public void SendLeaderboard()
+    {
+        var request = new UpdatePlayerStatisticsRequest
+        {
+            Statistics = new List<StatisticUpdate> {
+                new StatisticUpdate {
+                    StatisticName = "EnemiesKilled",
+                    Value = StatController.enemiesKilled
+                }
+            }
+        };
+        PlayFabClientAPI.UpdatePlayerStatistics(request, OnLeaderboardUpdate, OnError);
+    }
+
+    void OnLeaderboardUpdate(UpdatePlayerStatisticsResult result)
+    {
+        Debug.Log("Succesful leaderboard game");
+    }
+
+    public void GetLeaderboard()
+    {
+        var request = new GetLeaderboardRequest()
+        {
+            StatisticName = "EnemiesKilled",
+            StartPosition = 0,
+            MaxResultsCount = 25
+        };
+        PlayFabClientAPI.GetLeaderboard(request, OnLeaderboardGet, OnError);
+    }
+
+    public void GetLeaderboardAroundPlayer()
+    {
+        var request = new GetLeaderboardAroundPlayerRequest
+        {
+            StatisticName = "EnemiesKilled",
+            MaxResultsCount = 25
+        };
+        PlayFabClientAPI.GetLeaderboardAroundPlayer(request, OnLeaderboardAroundPlayerGet, OnError);
+    }
+
+    void OnLeaderboardAroundPlayerGet(GetLeaderboardAroundPlayerResult result)
+    {
+        int rows = 0;
+        foreach (Transform item in rowsParent)
+        {
+            Destroy(item.gameObject);
+        }
+
+        foreach (var item in result.Leaderboard)
+        {
+            GameObject newGo = Instantiate(rowPrefab, rowsParent);
+            Text[] texts = newGo.GetComponentsInChildren<Text>();
+            texts[0].text = (item.Position + 1).ToString();
+            texts[1].text = item.DisplayName;
+            texts[2].text = item.StatValue.ToString();
+
+            if (item.PlayFabId == loggedInPlayfabID)
+            {
+                texts[0].color = Color.cyan;
+                texts[1].color = Color.cyan;
+                texts[2].color = Color.cyan;
+                texts[0].fontSize = 80;
+                texts[1].fontSize = 80;
+                texts[2].fontSize = 80;
+            }
+
+            Debug.Log(item.Position + " " + item.PlayFabId + " " + item.StatValue);
+            rows++;
+        }
+        for (int i = rows; i < 26; i++)
+        {
+            GameObject newGo = Instantiate(rowPrefab, rowsParent);
+            Text[] texts = newGo.GetComponentsInChildren<Text>();
+            texts[0].text = "";
+            texts[1].text = "";
+            texts[2].text = "";
+        }
+    }
+
+    void OnLeaderboardGet(GetLeaderboardResult result)
+    {
+        int rows = 0;
+        foreach (Transform item in rowsParent)
+        {
+            Destroy(item.gameObject);
+        }
+
+        foreach (var item in result.Leaderboard)
+        {
+            GameObject newGo = Instantiate(rowPrefab, rowsParent);
+            Text[] texts = newGo.GetComponentsInChildren<Text>();
+            texts[0].text = (item.Position + 1).ToString();
+            texts[1].text = item.DisplayName;
+            texts[2].text = item.StatValue.ToString();
+
+            if (item.PlayFabId == loggedInPlayfabID)
+            {
+                texts[0].color = Color.cyan;
+                texts[1].color = Color.cyan;
+                texts[2].color = Color.cyan;
+                texts[0].fontSize = 80;
+                texts[1].fontSize = 80;
+                texts[2].fontSize = 80;
+            }
+
+            Debug.Log(item.Position + " " + item.PlayFabId + " " + item.StatValue);
+            rows++;
+        }
+        for (int i = rows; i < 26; i++)
+        {
+            GameObject newGo = Instantiate(rowPrefab, rowsParent);
+            Text[] texts = newGo.GetComponentsInChildren<Text>();
+            texts[0].text = "";
+            texts[1].text = "";
+            texts[2].text = "";
+        }
+    }
+    #endregion
+
     #region Feedback
     public void SendFeedback()
     {
@@ -355,6 +538,51 @@ public class PlayfabManager : MonoBehaviour
     {
         Debug.Log("Succesful Feedback sent!");
         ClosePanel(feedbackPanel);
+    }
+    #endregion
+
+    #region Display Name setter
+    public void UpdateDisplayName()
+    {
+        if (NameInput.text == "")
+        {
+            return;
+        }
+        var request = new UpdateUserTitleDisplayNameRequest
+        {
+            DisplayName = NameInput.text,
+        };
+        PlayFabClientAPI.UpdateUserTitleDisplayName(request, OnDisplayNameUpdate, OnError);
+    }
+
+    public void SetDisplayName()
+    {
+        if (NoNameInput.text.Length < 3)
+        {
+            NoMessageText.text = "Display Name too short!";
+            return;
+        }
+        if (NoNameInput.text.Length >= 18)
+        {
+            NoMessageText.text = "Display Name too long!";
+            return;
+        }
+        var request = new UpdateUserTitleDisplayNameRequest
+        {
+            DisplayName = NoNameInput.text,
+        };
+        PlayFabClientAPI.UpdateUserTitleDisplayName(request, OnDisplayNameSent, OnError);
+    }
+
+    void OnDisplayNameSent(UpdateUserTitleDisplayNameResult result)
+    {
+        Debug.Log("Sent display name!");
+        ClosePanel(DisplayNamePanel);
+    }
+
+    void OnDisplayNameUpdate(UpdateUserTitleDisplayNameResult result)
+    {
+        Debug.Log("Updated display name!");
     }
     #endregion
 

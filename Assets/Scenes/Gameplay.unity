@@ -846,6 +846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 473a890ad0499ca47a2db5abd0b8bf87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spaceshipChooser: {fileID: 1228180870}
   pausePanel: {fileID: 1362222942}
   RevivePanel: {fileID: 1751648464}
   ButtonRevive: {fileID: 1159891528}

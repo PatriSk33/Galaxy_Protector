@@ -8,6 +8,10 @@ public class rozhodovac : MonoBehaviour
 
     private void Start()
     {
+        ActivateSpaceship();
+    }
+    public void ActivateSpaceship()
+    {
         for (int i = 0; i < spaceshipPrefab.Length; i++)
         {
             if (i == StatController.selected)

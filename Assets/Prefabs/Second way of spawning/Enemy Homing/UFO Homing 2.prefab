@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e80c9fc4e01f044aa1ccdf19d57f641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 8605804911744701356, guid: df1589053d6de2844a9a20d57d067d79,
+  bulletPrefab: {fileID: 8605804911744701356, guid: 5731dad0b0fb50e4cacc5d9ac03ad199,
     type: 3}
   health: 90
   damage: 5

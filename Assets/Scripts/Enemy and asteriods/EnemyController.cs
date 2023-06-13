@@ -141,6 +141,9 @@ public class EnemyController : MonoBehaviour
             Laser.instance.colliders.Remove(this.gameObject.GetComponent<Collider>());
         }
 
+        //Leaderboard
+        StatController.enemiesKilled++;
+
         //Check if there are more enemies on the field?
         EnemySpawner.Instance.CheckEnemies();
 

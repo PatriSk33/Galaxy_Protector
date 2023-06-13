@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class GameplayUIButtons : MonoBehaviour
 {
     public static GameplayUIButtons instance;
+    public rozhodovac spaceshipChooser;
+
     public void Awake()
     {
         instance = this;
@@ -74,6 +76,7 @@ public class GameplayUIButtons : MonoBehaviour
         canRevive = false;
         RevivePanel.SetActive(false);
         StatController.Health = 10;
+        spaceshipChooser.ActivateSpaceship();
         Time.timeScale = 1;
     }
 
