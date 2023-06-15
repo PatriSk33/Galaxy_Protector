@@ -20,6 +20,9 @@ public class AsteroidMovement : MonoBehaviour
     private Vector3 originalCameraPosition;
     private bool isShaking = false;
 
+    [Header("Effects")]
+    public GameObject explosion;
+
 
     void Start()
     {
@@ -58,10 +61,11 @@ public class AsteroidMovement : MonoBehaviour
             StatController.Health -= damage;
             if (StatController.Health <= 0)
             {
-                GameplayUIButtons.instance.OpenRevivePanel();
+                Instantiate(explosion, transform.position, transform.rotation);
+                other.gameObject.SetActive(false);
             }
-            
-            Destroy(gameObject); //Destory Asteroid
+
+            Destroy(gameObject, 1); //Destory Asteroid
         }
     }
 

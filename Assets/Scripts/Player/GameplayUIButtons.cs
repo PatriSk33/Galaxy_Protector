@@ -90,4 +90,21 @@ public class GameplayUIButtons : MonoBehaviour
     {
         LevelPlayAds.Instance.ShowRewardedAd("Double_Money");
     }
+
+    public void ChechHealth()
+    {
+        if (StatController.Health <= 0 && canRevive)
+        {
+            OpenRevivePanel();
+        }
+        else if (StatController.Health <= 0 && !canRevive)
+        {
+            OpenAfterGame();
+        }
+    }
+
+    private void Update()
+    {
+        ChechHealth();
+    }
 }

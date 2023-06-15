@@ -9,9 +9,9 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Random things to shoot at player")]
     public List<GameObject> randomThingsPrefabs;
+    public GameObject dangerMark;
 
     [Header("Enemies in waves")]
-    List<GameObject>[] enemyPrefabs = new List<GameObject>[100];
     [Tooltip("0 - 5")] public List<GameObject> enemyPrefabs5;
     [Tooltip("5 - 10")] public List<GameObject> enemyPrefabs10;
     [Tooltip("10 - 15")] public List<GameObject> enemyPrefabs15;
@@ -32,6 +32,7 @@ public class EnemySpawner : MonoBehaviour
     [Tooltip("85 - 90")] public List<GameObject> enemyPrefabs90;
     [Tooltip("90 - 95")] public List<GameObject> enemyPrefabs95;
     [Tooltip("95 - 100")] public List<GameObject> enemyPrefabs100;
+    List<GameObject>[] enemyPrefabs = new List<GameObject>[20];
 
 
     [HideInInspector]public List<GameObject> enemiesOnField;
@@ -75,7 +76,15 @@ public class EnemySpawner : MonoBehaviour
     private void Start()
     {
         StartCoroutine(SpawnEnemy());
-        InvokeRepeating("SpawnRandomThings", spawnDelayRandomThings, spawnDelayRandomThings);
+        InvokeRepeating("SpawnRandomThings", spawnDelayRandomThings - 1.5f, spawnDelayRandomThings - 1.5f);
+    }
+
+    private void Update()
+    {
+        if (enemiesOnField.Count == 0)
+        {
+            StopCoroutine("Wait");
+        }
     }
 
     IEnumerator SpawnEnemy()
@@ -121,7 +130,7 @@ public class EnemySpawner : MonoBehaviour
             enemiesOnField.Add(enemyObject);
         }
 
-        if (!isBossWave && numEnemiesSpawned % 15 == 0 && numEnemiesSpawned > 0)
+        if (!isBossWave && numEnemiesSpawned % 8 == 0 && numEnemiesSpawned > 0)
         {
             StartCoroutine(Wait(30, false));
         }
@@ -134,10 +143,21 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnRandomThings()
     {
-        int Index = Random.Range(0, randomThingsPrefabs.Count);
-
-        Instantiate(randomThingsPrefabs[Index], new Vector3(PlayerMovement.curPos.x, -1.5f, 70), new Quaternion(0, 180, 0, 0));
+        StartCoroutine(SpawnRandomThing());
     }
+    IEnumerator SpawnRandomThing()
+    {
+        dangerMark.SetActive(true);         //Activate
+        yield return new WaitForSeconds(1);
+        dangerMark.SetActive(false);        //Deactivate
+        yield return new WaitForSeconds(0.5f);
+
+        int Index = Random.Range(0, randomThingsPrefabs.Count);
+        int xP = Random.Range(-xRange, xRange);
+
+        Instantiate(randomThingsPrefabs[Index], new Vector3(xP, -1.5f, 70), new Quaternion(0, 180, 0, 0));  //Shoot
+    }
+
 
     IEnumerator Wait(float waitTime, bool isBossWave)
     {

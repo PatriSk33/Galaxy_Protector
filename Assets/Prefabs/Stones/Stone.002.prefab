@@ -101,6 +101,8 @@ MonoBehaviour:
   damage: 1.5
   shakeDuration: 0.2
   shakeIntensity: 0.15
+  explosion: {fileID: 6963310582400106975, guid: 2ada80651cf38ed4b8fb4ad563442164,
+    type: 3}
 --- !u!54 &305661193941157870
 Rigidbody:
   m_ObjectHideFlags: 0

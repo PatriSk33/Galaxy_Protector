@@ -17,6 +17,8 @@ public class Gun
 }
 public class PlayerMovement : MonoBehaviour
 {
+    public static PlayerMovement instance;
+
     public static Vector2 move;
     public static Vector3 curPos;
 
@@ -24,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private float fireRate;
     private float xRange = 30;
     private float cooldown;
+    public float cooldownIncrement = 5;
     public bool LaserSpaceship;
 
     //Spaceship
@@ -48,12 +51,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        fireRate = StatController.FireRate;
+        instance = this;
+
+        
         if (!LaserSpaceship)
         {
+            fireRate = StatController.FireRate;
             InvokeRepeating("Shoot", 1, fireRate);
         }
-        else { cooldown = Time.time + 5; }
+        else 
+        {
+            cooldownIncrement = StatController.FireRate;
+            cooldown = Time.time + cooldownIncrement; 
+        }
     }
 
     // Update is called once per frame
@@ -73,7 +83,14 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Move left and Right
-        transform.Translate(Vector3.right * Time.deltaTime * movementSpeed * move, Space.World);
+        if (!SpaceshipController.instance.isSpeedBoostActive)
+        {
+            transform.Translate(Vector3.right * Time.deltaTime * movementSpeed * move, Space.World);
+        }
+        else
+        {
+            transform.Translate(Vector3.right * Time.deltaTime * movementSpeed * move * 1.2f, Space.World);  //Speed boost activated
+        }
 
         // Laser ship
         if (LaserSpaceship && cooldown < Time.time)
@@ -82,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Shoot()
+    public void Shoot()
     {
         if (StatController.selected != 3)
         {
@@ -100,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator ActivateLaser()
     {
-        cooldown = Time.time + 5;
+        cooldown = Time.time + cooldownIncrement;
         bulletPrefab.SetActive(true);
         yield return new WaitForSeconds(3);
         bulletPrefab.SetActive(false);

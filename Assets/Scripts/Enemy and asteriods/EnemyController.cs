@@ -14,7 +14,7 @@ public class EnemyController : MonoBehaviour
     private float moveTime = 7f;
     private float moveSpeed = 3f;
     public int amountOfMoney;
-    [Tooltip("0 = easy, 1 = medium, 2 = hard, 3 = boss")]public int enemyIndex;
+    [Tooltip("Bullets spawned")]public int enemyIndex;
 
     [HideInInspector] public bool laserIn;
 

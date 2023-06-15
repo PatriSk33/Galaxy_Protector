@@ -21,6 +21,6 @@ public class HealthMiddleMan : MonoBehaviour
 
         energyBar.fillAmount = healthPercentage;
 
-        healthText.text = $"{(int)StatController.Health}/{(int)StatController.MaxHealth}";
+        healthText.text = $"{StatController.Health}/{(int)StatController.MaxHealth}";
     }
 }

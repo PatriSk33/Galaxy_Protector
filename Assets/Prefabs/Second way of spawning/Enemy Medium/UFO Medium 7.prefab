@@ -247,10 +247,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 8605804911744701356, guid: c4bc779f8c829fb43b6cab61b5908594,
     type: 3}
-  health: 70
+  health: 45
   damage: 4
   fireRate: 1.5
-  amountOfMoney: 20
+  amountOfMoney: 10
   enemyIndex: 1
   laserIn: 0
   explosion: {fileID: 6963310582400106975, guid: 2ada80651cf38ed4b8fb4ad563442164,

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GoForward : MonoBehaviour
 {
-    private float lifeTime = 3;
+    private float lifeTime = 4.5f;
     public bool isPlayerBullet, isBossBullet;
     [HideInInspector] public float bulletHealth = 2;
     [HideInInspector]public float damage;   // Enemy Damage
@@ -45,6 +45,7 @@ public class GoForward : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
         if (bulletHealth <= 0) { Destroy(gameObject); }
     }
 
@@ -55,31 +56,22 @@ public class GoForward : MonoBehaviour
             col.gameObject.GetComponent<EnemyController>().health -= StatController.Damage;
             Destroy(gameObject);
         }
-
-        if (col.tag == "Player" && !isPlayerBullet)
+        else if (col.tag == "Player" && !isPlayerBullet)
         {
             //Effects
             SoundManager.instance.PlayOnPlayerHit();
 
             //Damage player
             StatController.Health -= damage;
-            if (StatController.Health <= 0 && GameplayUIButtons.instance.canRevive)
+            if (StatController.Health <= 0)
             {
                 Instantiate(explosion, transform.position, transform.rotation);
                 col.gameObject.SetActive(false);
-                GameplayUIButtons.instance.OpenRevivePanel();
-            }
-            else if (StatController.Health <= 0 && !GameplayUIButtons.instance.canRevive)
-            {
-                Instantiate(explosion, transform.position, transform.rotation);
-                col.gameObject.SetActive(false);
-                GameplayUIButtons.instance.OpenAfterGame();
             }
 
             Destroy(gameObject);
         }
-
-        if (col.tag == "Bullet" && isPlayerBullet && !col.gameObject.GetComponent<GoForward>().isPlayerBullet && !col.gameObject.GetComponent<GoForward>().isBossBullet)
+        else if (col.tag == "Bullet" && isPlayerBullet && !col.gameObject.GetComponent<GoForward>().isPlayerBullet && !col.gameObject.GetComponent<GoForward>().isBossBullet)
         {
             col.GetComponent<GoForward>().bulletHealth -= StatController.Damage;
             bulletHealth -= col.GetComponent<GoForward>().damage;

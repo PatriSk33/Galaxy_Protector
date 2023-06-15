@@ -129,15 +129,27 @@ public class UpgradeManager : MonoBehaviour
 
     public void UpdatePriceTag()
     {
-        int[] prices = { 100, 250, 500, 750, 1000 };
+        // Define the price arrays for each spaceship
+        int[][] spaceshipPrices =
+        {
+        new int[] { 100, 250, 500, 750, 1000 },  // Spaceship 1 prices
+        new int[] { 200, 400, 600, 800, 1000 },  // Spaceship 2 prices
+        new int[] { 300, 500, 700, 900, 1100 },   // Spaceship 3 prices
+        new int[] { 400, 600, 800, 1000, 1200 }    // Spaceship 4 prices
+        };
 
-        DmgPrice = prices[Mathf.Min(StatController.DamageLvl[StatController.selected], prices.Length - 1)];
-        FireRatePrice = prices[Mathf.Min(StatController.FireRateLvl[StatController.selected], prices.Length - 1)];
+        int spaceshipIndex = StatController.selected; // Index of the selected spaceship
+        int[] prices = spaceshipPrices[spaceshipIndex]; // Get the price array for the selected spaceship
 
-        DmgCostText.text = (StatController.DamageLvl[StatController.selected] < 6) ? DmgPrice.ToString() : "";
-        DmgLvlText.text = (StatController.DamageLvl[StatController.selected] < 6) ? ("LVL. " + StatController.DamageLvl[StatController.selected]) : "LVL. MAX";
+        int priceOffset = spaceshipIndex * 5; // Calculate the starting index offset based on the selected spaceship
 
-        FireRateCostText.text = (StatController.FireRateLvl[StatController.selected] < 6) ? FireRatePrice.ToString() : "";
-        FireRateLvlText.text = (StatController.FireRateLvl[StatController.selected] < 6) ? ("LVL. " + StatController.FireRateLvl[StatController.selected]) : "LVL. MAX";
+        DmgPrice = prices[Mathf.Min(StatController.DamageLvl[spaceshipIndex] - priceOffset, prices.Length - 1)];
+        FireRatePrice = prices[Mathf.Min(StatController.FireRateLvl[spaceshipIndex] - priceOffset, prices.Length - 1)];
+
+        DmgCostText.text = (StatController.DamageLvl[spaceshipIndex] < (5 + priceOffset)) ? DmgPrice.ToString() : "";
+        DmgLvlText.text = (StatController.DamageLvl[spaceshipIndex] < (5 + priceOffset)) ? ("LVL. " + (StatController.DamageLvl[spaceshipIndex] - priceOffset)) : "LVL. MAX";
+
+        FireRateCostText.text = (StatController.FireRateLvl[spaceshipIndex] < (5 + priceOffset)) ? FireRatePrice.ToString() : "";
+        FireRateLvlText.text = (StatController.FireRateLvl[spaceshipIndex] < (5 + priceOffset)) ? ("LVL. " + (StatController.FireRateLvl[spaceshipIndex] - priceOffset)) : "LVL. MAX";
     }
 }
