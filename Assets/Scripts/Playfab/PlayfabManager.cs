@@ -153,7 +153,6 @@ public class PlayfabManager : MonoBehaviour
     void OnDataSend(UpdateUserDataResult result)
     {
         Debug.Log("Succesful user data send!");
-        SendLeaderboard();
     }
 
     public void GetPlayerPrefbs()
@@ -415,7 +414,7 @@ public class PlayfabManager : MonoBehaviour
 
     void OnLeaderboardUpdate(UpdatePlayerStatisticsResult result)
     {
-        Debug.Log("Succesful leaderboard game");
+        Debug.Log("Succesful leaderboard data sent");
     }
 
     public void GetLeaderboard()
@@ -548,6 +547,14 @@ public class PlayfabManager : MonoBehaviour
         {
             return;
         }
+        if (NameInput.text.Length < 3)
+        {
+            return;
+        }
+        if (NameInput.text.Length >= 18)
+        {
+            return;
+        }
         var request = new UpdateUserTitleDisplayNameRequest
         {
             DisplayName = NameInput.text,
@@ -644,9 +651,15 @@ public class PlayfabManager : MonoBehaviour
         {
             Debug.Log("Guns got!");
             List<Gun> guns = JsonConvert.DeserializeObject<List<Gun>>(result.Data["Guns"].Value);
-            for(int i =0; i < playerMovement.Length; i++)
+            for(int i = 0; i < playerMovement.Length; i++)
             {
                 playerMovement[i].SetStats(guns[i],i);
+            }
+
+            if (!ShopController.buyed[StatController.selected])
+            {
+                StatController.selected = 0;
+                PlayerPrefs.SetInt("selected", 0);
             }
 
             UpgradeManager.Instance.UpdatePriceTag();

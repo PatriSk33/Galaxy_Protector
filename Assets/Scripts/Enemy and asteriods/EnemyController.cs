@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
 public class EnemyController : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class EnemyController : MonoBehaviour
     private float moveTime = 7f;
     private float moveSpeed = 3f;
     public int amountOfMoney;
-    [Tooltip("Bullets spawned")]public int enemyIndex;
+    [Tooltip("Bullets spawned")][Range(1,7)]public int enemyIndex;
 
     [HideInInspector] public bool laserIn;
 
@@ -74,18 +73,18 @@ public class EnemyController : MonoBehaviour
         GameObject bullet = null;
         switch (enemyIndex)
         {
-            case 0:
+            case 1:
                 bullet = Instantiate(bulletPrefab, transform.position, transform.rotation) as GameObject;
                 bullet.GetComponent<GoForward>().damage = damage;
                 break;
-            case 1:
+            case 2:
                 bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-1,0,0), transform.rotation) as GameObject;
                 bullet.GetComponent<GoForward>().damage = damage;
 
                 bullet = Instantiate(bulletPrefab, transform.position + new Vector3(+1, 0, 0), transform.rotation) as GameObject;
                 bullet.GetComponent<GoForward>().damage = damage;
                 break;
-            case 2:
+            case 3:
                 bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.2f, 0, 0), transform.rotation) as GameObject;
                 bullet.GetComponent<GoForward>().damage = damage;
                 bullet.transform.Rotate(0, -4, 0);
@@ -97,7 +96,7 @@ public class EnemyController : MonoBehaviour
                 bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0, 0, 0), transform.rotation) as GameObject;
                 bullet.GetComponent<GoForward>().damage = damage;
                 break;
-            case 3:
+            case 4:
                 bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.2f, 0, 0), transform.rotation) as GameObject;
                 bullet.GetComponent<GoForward>().damage = damage;
                 bullet.transform.Rotate(0, -3, 0);
@@ -106,13 +105,79 @@ public class EnemyController : MonoBehaviour
                 bullet.GetComponent<GoForward>().damage = damage;
                 bullet.transform.Rotate(0, 3, 0);
 
-                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.25f, 0, 0), transform.rotation) as GameObject;
                 bullet.GetComponent<GoForward>().damage = damage;
                 bullet.transform.Rotate(0, -6, 0);
 
-                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.25f, 0, 0), transform.rotation) as GameObject;
                 bullet.GetComponent<GoForward>().damage = damage;
                 bullet.transform.Rotate(0, 6, 0);
+                break;
+            case 5:
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, -3, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, 3, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.25f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, -6, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.25f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, 6, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                break;
+            case 6:
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, -3, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, 3, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.25f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, -6, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.25f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, 6, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.3f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(+0.3f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                break;
+            case 7:
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, -3, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.2f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, 3, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.25f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, -6, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0.25f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+                bullet.transform.Rotate(0, 6, 0);
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(-0.3f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
+
+                bullet = Instantiate(bulletPrefab, transform.position + new Vector3(+0.3f, 0, 0), transform.rotation) as GameObject;
+                bullet.GetComponent<GoForward>().damage = damage;
 
                 bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0, 0, 0), transform.rotation) as GameObject;
                 bullet.GetComponent<GoForward>().damage = damage;

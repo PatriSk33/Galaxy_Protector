@@ -251,7 +251,7 @@ MonoBehaviour:
   damage: 3
   fireRate: 2
   amountOfMoney: 5
-  enemyIndex: 0
+  enemyIndex: 1
   laserIn: 0
   explosion: {fileID: 6963310582400106975, guid: 2ada80651cf38ed4b8fb4ad563442164,
     type: 3}

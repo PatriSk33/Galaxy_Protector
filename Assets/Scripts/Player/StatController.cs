@@ -54,8 +54,6 @@ public class StatController : MonoBehaviour
     {
         instance = this;
 
-        //Money = PlayerPrefs.GetInt("money", 0);
-        //WaveCompleted = PlayerPrefs.GetInt("WaveCompleted", 1);
         timesPlayed = PlayerPrefs.GetInt("timesPlayed", 0);
         selected = PlayerPrefs.GetInt("selected", 0);
         
@@ -157,11 +155,11 @@ public class StatController : MonoBehaviour
         damage = gunStats[selected].startingDamage + (DamageLvl[selected] * 0.8f);
 
         FireRate = Mathf.Clamp(fireRate, 0.3f, 1.8f);
-        Damage = Mathf.Clamp(damage, 2f, 18f);
+        Damage = Mathf.Clamp(damage, 2f, 18.8f);
     }
 
 
-    private static readonly float[] maxHealthValues = { 20f, 60f, 100f, 150f};
+    private static readonly float[] maxHealthValues = { 25f, 50f, 100f, 150f};
     private void SetMaximumHP()
     {
         int selectedValue = Mathf.Clamp(selected, 0, maxHealthValues.Length - 1);

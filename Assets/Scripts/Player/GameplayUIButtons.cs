@@ -7,6 +7,7 @@ public class GameplayUIButtons : MonoBehaviour
 {
     public static GameplayUIButtons instance;
     public rozhodovac spaceshipChooser;
+    float curRot = 0;
 
     public void Awake()
     {
@@ -46,7 +47,6 @@ public class GameplayUIButtons : MonoBehaviour
 
     // Reviving and sending you to main menu
     public GameObject RevivePanel;
-    public GameObject ButtonRevive;
     [HideInInspector] public bool canRevive;
 
     public void OpenRevivePanel()
@@ -62,12 +62,10 @@ public class GameplayUIButtons : MonoBehaviour
         }
     }
 
-    [Tooltip("In Revive Panel")]
-    public void ContinueToMenu()
+    public void ContinueToMenu() // In Revive Panel
     {
         Time.timeScale = 1.0f;
         OpenAfterGame();
-        ButtonRevive.SetActive(true);
         RevivePanel.SetActive(false);
     }
 
@@ -77,9 +75,10 @@ public class GameplayUIButtons : MonoBehaviour
         RevivePanel.SetActive(false);
         StatController.Health = 10;
         spaceshipChooser.ActivateSpaceship();
-        Time.timeScale = 1;
     }
 
+
+    // After Game Panel / AD
     public void OpenAfterGame()
     {
         AfterGameController.won = false;
@@ -91,6 +90,8 @@ public class GameplayUIButtons : MonoBehaviour
         LevelPlayAds.Instance.ShowRewardedAd("Double_Money");
     }
 
+
+    // Health
     public void ChechHealth()
     {
         if (StatController.Health <= 0 && canRevive)
@@ -106,5 +107,9 @@ public class GameplayUIButtons : MonoBehaviour
     private void Update()
     {
         ChechHealth();
+
+        curRot += 2 * Time.deltaTime;
+        curRot %= 360;
+        RenderSettings.skybox.SetFloat("_Rotation", curRot);
     }
 }

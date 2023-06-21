@@ -166,6 +166,7 @@ public class LevelPlayAds : MonoBehaviour
             // Add your custom logic here 
             AfterGameController.addedMoney *= 2;
             AfterGameController.instance.UpdateText();
+            AfterGameController.instance.AdButton.gameObject.SetActive(false);
         }
         if (placement != null && placement.getPlacementName() == "Revive_Player")
         {

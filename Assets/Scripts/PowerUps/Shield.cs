@@ -14,5 +14,9 @@ public class Shield : MonoBehaviour
                 Destroy(other.gameObject); // Destroy the enemy bullet
             }
         }
+        else if ( other.CompareTag("Asteroid"))
+        {
+            Destroy(other.gameObject); // Destroy Asteroid
+        }
     }
 }

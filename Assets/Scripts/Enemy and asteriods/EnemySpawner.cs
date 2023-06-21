@@ -204,10 +204,15 @@ public class EnemySpawner : MonoBehaviour
 
     private void UpdateMaxEnemiesCount()
     {
-        if (StatController.Wave >= 1 && StatController.Wave <= 100)
+        if (StatController.Wave < 100 && StatController.Wave >= 1)
         {
-            maxEnemies = 2 + (StatController.Wave - 1) * 2;
+            maxEnemies = 1 + StatController.Wave;
             spawnDelayRandomThings = 13 - (StatController.Wave - 1) / 10;
+        }
+        else if (StatController.Wave == 100)
+        {
+            maxEnemies = 200;
+            spawnDelayRandomThings = 3;
         }
     }
 }

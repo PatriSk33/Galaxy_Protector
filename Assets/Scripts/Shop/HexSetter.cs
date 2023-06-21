@@ -5,16 +5,23 @@ using UnityEngine.UI;
 
 public class HexSetter : MonoBehaviour
 {
-    private Material detailsMaterial;
+    public Material detailsMaterial;
     private Color newColorDetails;
     public InputField hexInput;
     public Text onScreenText;
     private int hexSetterBought = 0;  //0 = false      1 = true
+    private string hexValue;
     public int cost;
 
     private void Start()
     {
         hexSetterBought = PlayerPrefs.GetInt("hexSetterBought", 0);
+        
+        if (PlayerPrefs.HasKey("HexValue"))
+        {
+            hexValue = PlayerPrefs.GetString("HexValue");
+            SetHexColor(hexValue);
+        }
     }
 
     private void ChangeColor()
@@ -22,7 +29,7 @@ public class HexSetter : MonoBehaviour
         detailsMaterial.color = newColorDetails;
     }
 
-    private void SetHexColor()
+    private void SetHexColor(string hexvalue = null)
     {
         // Check if "#" is missing and add it if needed
         if (hexInput.text.Length < 7 && hexInput.text[0] != '#')
@@ -30,7 +37,16 @@ public class HexSetter : MonoBehaviour
             hexInput.text = "#" + hexInput.text;
         }
 
-        ColorUtility.TryParseHtmlString(hexInput.text, out newColorDetails);
+        if (hexvalue == null)
+        {
+            ColorUtility.TryParseHtmlString(hexInput.text, out newColorDetails);
+            PlayerPrefs.SetString("HexValue", hexInput.text);
+        }
+        else
+        {
+            ColorUtility.TryParseHtmlString(hexvalue, out newColorDetails);
+        }
+
         ChangeColor();
     }
 

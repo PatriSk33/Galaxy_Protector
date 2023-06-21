@@ -245,13 +245,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e80c9fc4e01f044aa1ccdf19d57f641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 8605804911744701356, guid: 0bc452277f238e142b21d83acb0b2238,
+  bulletPrefab: {fileID: 8605804911744701356, guid: e5187855d15f8db4594b1f225bae8afa,
     type: 3}
   health: 375
   damage: 12
   fireRate: 1.3
   amountOfMoney: 325
-  enemyIndex: 3
+  enemyIndex: 7
   laserIn: 0
   explosion: {fileID: 6963310582400106975, guid: 2ada80651cf38ed4b8fb4ad563442164,
     type: 3}

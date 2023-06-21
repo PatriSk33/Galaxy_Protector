@@ -30,7 +30,7 @@ public class UpgradeManager : MonoBehaviour
     {
         if (PlayfabManager.clientConnected)
         {
-            if (StatController.FireRateLvl[StatController.selected] < 5)
+            if (StatController.FireRateLvl[StatController.selected] < 4)
             {
                 if (StatController.Money >= FireRatePrice)
                 {
@@ -52,14 +52,14 @@ public class UpgradeManager : MonoBehaviour
                     notEnoughMoneySound.Play();
                 }
             }
-            else if (StatController.FireRateLvl[StatController.selected] == 5)
+            else if (StatController.FireRateLvl[StatController.selected] == 4)
             {
                 if (StatController.Money >= FireRatePrice)
                 {
                     StatController.Money -= FireRatePrice;
                     StatController.FireRateLvl[StatController.selected]++;
 
-                    fireRateDisable.SetActive(false);
+                    UpdatePriceTag();
 
                     StatController.instance.UpdateStats();
                     StatController.instance.UpdateText();
@@ -80,7 +80,7 @@ public class UpgradeManager : MonoBehaviour
     {
         if (PlayfabManager.clientConnected)
         {
-            if (StatController.DamageLvl[StatController.selected] < 5)
+            if (StatController.DamageLvl[StatController.selected] < 4)
             {
                 if (StatController.Money >= DmgPrice)
                 {
@@ -102,14 +102,14 @@ public class UpgradeManager : MonoBehaviour
                     notEnoughMoneySound.Play();
                 }
             }
-            else if (StatController.DamageLvl[StatController.selected] == 5)
+            else if (StatController.DamageLvl[StatController.selected] == 4)
             {
                 if (StatController.Money >= DmgPrice)
                 {
                     StatController.Money -= DmgPrice;
                     StatController.DamageLvl[StatController.selected]++;
 
-                    dmgDisable.SetActive(false);
+                    UpdatePriceTag();
 
                     StatController.instance.UpdateStats();
                     StatController.instance.UpdateText();
@@ -133,23 +133,30 @@ public class UpgradeManager : MonoBehaviour
         int[][] spaceshipPrices =
         {
         new int[] { 100, 250, 500, 750, 1000 },  // Spaceship 1 prices
-        new int[] { 200, 400, 600, 800, 1000 },  // Spaceship 2 prices
-        new int[] { 300, 500, 700, 900, 1100 },   // Spaceship 3 prices
-        new int[] { 400, 600, 800, 1000, 1200 }    // Spaceship 4 prices
+        new int[] { 250, 500, 750, 1000, 1250 },  // Spaceship 2 prices
+        new int[] { 500, 750, 1000, 1250, 1500 },   // Spaceship 3 prices
+        new int[] { 750, 1000, 1250, 1500, 1750 }    // Spaceship 4 prices
         };
 
         int spaceshipIndex = StatController.selected; // Index of the selected spaceship
         int[] prices = spaceshipPrices[spaceshipIndex]; // Get the price array for the selected spaceship
 
-        int priceOffset = spaceshipIndex * 5; // Calculate the starting index offset based on the selected spaceship
+        DmgPrice = prices[Mathf.Min(StatController.DamageLvl[spaceshipIndex], prices.Length - 1)];
+        FireRatePrice = prices[Mathf.Min(StatController.FireRateLvl[spaceshipIndex], prices.Length - 1)];
 
-        DmgPrice = prices[Mathf.Min(StatController.DamageLvl[spaceshipIndex] - priceOffset, prices.Length - 1)];
-        FireRatePrice = prices[Mathf.Min(StatController.FireRateLvl[spaceshipIndex] - priceOffset, prices.Length - 1)];
+        DmgCostText.text = (StatController.DamageLvl[spaceshipIndex] < 5 ) ? DmgPrice.ToString() : "";
+        DmgLvlText.text = (StatController.DamageLvl[spaceshipIndex] < 5 ) ? "LVL. " + StatController.DamageLvl[spaceshipIndex] : "LVL. MAX";
 
-        DmgCostText.text = (StatController.DamageLvl[spaceshipIndex] < (5 + priceOffset)) ? DmgPrice.ToString() : "";
-        DmgLvlText.text = (StatController.DamageLvl[spaceshipIndex] < (5 + priceOffset)) ? ("LVL. " + (StatController.DamageLvl[spaceshipIndex] - priceOffset)) : "LVL. MAX";
+        FireRateCostText.text = (StatController.FireRateLvl[spaceshipIndex] < 5 ) ? FireRatePrice.ToString() : "";
+        FireRateLvlText.text = (StatController.FireRateLvl[spaceshipIndex] < 5 ) ? "LVL. " + StatController.FireRateLvl[spaceshipIndex] : "LVL. MAX";
 
-        FireRateCostText.text = (StatController.FireRateLvl[spaceshipIndex] < (5 + priceOffset)) ? FireRatePrice.ToString() : "";
-        FireRateLvlText.text = (StatController.FireRateLvl[spaceshipIndex] < (5 + priceOffset)) ? ("LVL. " + (StatController.FireRateLvl[spaceshipIndex] - priceOffset)) : "LVL. MAX";
+        if (StatController.DamageLvl[StatController.selected] == 5)
+        {
+            dmgDisable.SetActive(false);
+        }
+        if (StatController.FireRateLvl[StatController.selected] == 5)
+        {
+            fireRateDisable.SetActive(false);
+        }
     }
 }

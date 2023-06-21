@@ -125,7 +125,7 @@ public class ShopController : MonoBehaviour
                 return;
             }
 
-            if (Rockets == 1 || buyed[Rockets - 1])
+            if (buyed[Rockets - 1] /*&& StatController.DamageLvl[Rockets - 1] == 5 && StatController.FireRateLvl[Rockets - 1] == 5*/)
             {
                 buyed[Rockets] = true;
                 StatController.Money -= price[Rockets];

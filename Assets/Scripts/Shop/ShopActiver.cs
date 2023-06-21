@@ -7,10 +7,12 @@ public class ShopActiver : MonoBehaviour
 {
     public void GoToShop()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene("Shop");
     }
     public void GoToHome()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(0);
     }
 }

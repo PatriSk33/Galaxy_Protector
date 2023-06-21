@@ -7,8 +7,11 @@ using UnityEngine.UI;
 public class AfterGameController : MonoBehaviour
 {
     public static AfterGameController instance;
+
     public Text ifCompleted, amountAdded;
     public GameObject AfterGamePanel;
+    public Button AdButton;
+
     public static bool won;
     public static int addedMoney;
 
@@ -24,6 +27,7 @@ public class AfterGameController : MonoBehaviour
         StatController.Money += addedMoney;
         addedMoney = 0;
 
+        StatController.timesPlayed++;
         StatController.Wave++;
         StatController.instance.Save();
         Time.timeScale = 1;
