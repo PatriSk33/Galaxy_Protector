@@ -13,6 +13,7 @@ public class AfterGameController : MonoBehaviour
     public Button AdButton;
 
     public static bool won;
+    public static float multiplier = 1;
     public static int addedMoney;
 
     private void Awake()
@@ -24,7 +25,7 @@ public class AfterGameController : MonoBehaviour
     {
         AfterGamePanel.SetActive(false);
 
-        StatController.Money += addedMoney;
+        StatController.Money += Mathf.RoundToInt(addedMoney * multiplier);
         addedMoney = 0;
 
         StatController.timesPlayed++;
@@ -50,7 +51,7 @@ public class AfterGameController : MonoBehaviour
         {
             ifCompleted.text = "Wave " + (StatController.Wave).ToString() + " Lost";
         }
-        amountAdded.text = "+ " + addedMoney.ToString();
+        amountAdded.text = "+ " + (Mathf.RoundToInt(addedMoney * multiplier)).ToString();
     }
 
 }

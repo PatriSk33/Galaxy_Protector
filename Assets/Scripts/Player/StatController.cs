@@ -77,13 +77,17 @@ public class StatController : MonoBehaviour
         //Show feedback panel
         if (timesPlayed % 7 == 0 && timesPlayed > 0) { PlayfabManager.Instance.OpenPanel(PlayfabManager.Instance.feedbackPanel); }
 
+        if (PlayerPrefs.HasKey("HexValue") && HexSetter.Instance != null)
+        {
+            HexSetter.Instance.hexValue = PlayerPrefs.GetString("HexValue");
+            HexSetter.Instance.SetHexColor(HexSetter.Instance.hexValue);
+        }
 
         //Health
         SetMaximumHP();
         Health = MaxHealth;
 
         UpdateStats();
-        UpdateText();
 
         //Finished
         if (WaveCompleted > 100) { WaveCompleted = 100; }
@@ -93,6 +97,7 @@ public class StatController : MonoBehaviour
             finishedScreen.SetActive(true);
         }
         Wave = WaveCompleted;
+
         UpdateText();
     }
 
@@ -126,8 +131,6 @@ public class StatController : MonoBehaviour
 
     public void Save()
     {
-        //PlayerPrefs.SetInt("WaveCompleted", WaveCompleted);
-        //PlayerPrefs.SetInt("money", Money);
         PlayerPrefs.SetInt("selected", selected);
         PlayerPrefs.SetInt("timesPlayed", timesPlayed);
         if (PlayerPrefs.HasKey("password") && PlayerPrefs.HasKey("email"))

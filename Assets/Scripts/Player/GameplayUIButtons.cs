@@ -108,7 +108,7 @@ public class GameplayUIButtons : MonoBehaviour
     {
         ChechHealth();
 
-        curRot += 2 * Time.deltaTime;
+        curRot += Time.deltaTime;
         curRot %= 360;
         RenderSettings.skybox.SetFloat("_Rotation", curRot);
     }

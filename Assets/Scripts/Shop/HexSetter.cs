@@ -5,13 +5,21 @@ using UnityEngine.UI;
 
 public class HexSetter : MonoBehaviour
 {
+    public static HexSetter Instance;
+
     public Material detailsMaterial;
     private Color newColorDetails;
     public InputField hexInput;
     public Text onScreenText;
     private int hexSetterBought = 0;  //0 = false      1 = true
-    private string hexValue;
+    [HideInInspector] public string hexValue;
     public int cost;
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -29,12 +37,15 @@ public class HexSetter : MonoBehaviour
         detailsMaterial.color = newColorDetails;
     }
 
-    private void SetHexColor(string hexvalue = null)
+    public void SetHexColor(string hexvalue = null)
     {
         // Check if "#" is missing and add it if needed
-        if (hexInput.text.Length < 7 && hexInput.text[0] != '#')
+        if(hexInput.text.Length > 0)
         {
-            hexInput.text = "#" + hexInput.text;
+            if (hexInput.text.Length < 7 && hexInput.text[0] != '#' && hexvalue == null)
+            {
+                hexInput.text = "#" + hexInput.text;
+            }
         }
 
         if (hexvalue == null)

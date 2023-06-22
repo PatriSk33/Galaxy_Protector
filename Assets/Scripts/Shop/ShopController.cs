@@ -20,6 +20,9 @@ public class ShopController : MonoBehaviour
     //Audio
     public AudioSource notEnoughMoneySound;
 
+    //Lock icon
+    public GameObject lockIcon;
+
     private void Awake()
     {
         instance = this;
@@ -28,6 +31,7 @@ public class ShopController : MonoBehaviour
         x = 0;
         priceTag.gameObject.SetActive(false);
         buyButton.gameObject.SetActive(false);
+        lockIcon.gameObject.SetActive(false);
 
         selectButtonText.text = (Rockets == StatController.selected) ? "Selected" : "Select";
     }
@@ -48,8 +52,7 @@ public class ShopController : MonoBehaviour
                 buyButton.gameObject.SetActive(false);
                 selectButton.gameObject.SetActive(true);
                 priceTag.gameObject.SetActive(false);
-                if (Rockets == StatController.selected) { selectButtonText.text = "Selected"; }
-                else { selectButtonText.text = "Select"; }
+                selectButtonText.text = (Rockets == StatController.selected) ? "Selected" : "Select";
             }
             else 
             { 
@@ -57,6 +60,18 @@ public class ShopController : MonoBehaviour
                 selectButton.gameObject.SetActive(false);
                 priceTag.gameObject.SetActive(true);
                 priceTag.text = price[Rockets].ToString();
+            }
+
+            if ((Rockets * 25) > StatController.WaveCompleted)
+            {
+                priceTag.gameObject.SetActive(false);
+                buyButton.gameObject.SetActive(false);
+                selectButton.gameObject.SetActive(false);
+                lockIcon.gameObject.SetActive(true);
+            }
+            else
+            {
+                lockIcon.gameObject.SetActive(false);
             }
         }
         else if (Rockets != 0)
@@ -67,8 +82,7 @@ public class ShopController : MonoBehaviour
             {
                 buyButton.gameObject.SetActive(false);
                 selectButton.gameObject.SetActive(true);
-                if (Rockets == StatController.selected) { selectButtonText.text = "Selected"; }
-                else { selectButtonText.text = "Select"; }
+                selectButtonText.text = (Rockets == StatController.selected) ? "Selected" : "Select";
                 priceTag.gameObject.SetActive(false);
             }
             else 
@@ -77,6 +91,18 @@ public class ShopController : MonoBehaviour
                 selectButton.gameObject.SetActive(false);
                 priceTag.gameObject.SetActive(true);
                 priceTag.text = price[Rockets].ToString();
+            }
+
+            if ((Rockets * 25) > StatController.WaveCompleted && Rockets != 0)
+            {
+                priceTag.gameObject.SetActive(false);
+                buyButton.gameObject.SetActive(false);
+                selectButton.gameObject.SetActive(false);
+                lockIcon.gameObject.SetActive(true);
+            }
+            else
+            {
+                lockIcon.gameObject.SetActive(false);
             }
         }
     }
@@ -89,7 +115,9 @@ public class ShopController : MonoBehaviour
             Rockets = 0;
             buyButton.gameObject.SetActive(false);
             selectButton.gameObject.SetActive(true);
+            selectButtonText.text = (Rockets == StatController.selected) ? "Selected" : "Select";
             priceTag.gameObject.SetActive(false);
+            lockIcon.gameObject.SetActive(false);
         }
         else if(Rockets != 3)
         {
@@ -99,16 +127,27 @@ public class ShopController : MonoBehaviour
             {
                 buyButton.gameObject.SetActive(false);
                 selectButton.gameObject.SetActive(true);
-                if (Rockets == StatController.selected) { selectButtonText.text = "Selected"; }
-                else { selectButtonText.text = "Select"; }
+                selectButtonText.text = (Rockets == StatController.selected) ? "Selected" : "Select";
                 priceTag.gameObject.SetActive(false);
             }
-            else 
+            else
             { 
                 buyButton.gameObject.SetActive(true);
                 selectButton.gameObject.SetActive(false);
                 priceTag.gameObject.SetActive(true);
                 priceTag.text = price[Rockets].ToString();
+            }
+
+            if ((Rockets * 25) > StatController.WaveCompleted)
+            { 
+                priceTag.gameObject.SetActive(false);
+                buyButton.gameObject.SetActive(false);
+                selectButton.gameObject.SetActive(false);
+                lockIcon.gameObject.SetActive(true);
+            }
+            else
+            {
+                lockIcon.gameObject.SetActive(false);
             }
         }
     }
@@ -125,7 +164,7 @@ public class ShopController : MonoBehaviour
                 return;
             }
 
-            if (buyed[Rockets - 1] /*&& StatController.DamageLvl[Rockets - 1] == 5 && StatController.FireRateLvl[Rockets - 1] == 5*/)
+            if (buyed[Rockets - 1] && (Rockets * 25) >= StatController.WaveCompleted )
             {
                 buyed[Rockets] = true;
                 StatController.Money -= price[Rockets];

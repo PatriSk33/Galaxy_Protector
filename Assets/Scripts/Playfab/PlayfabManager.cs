@@ -619,6 +619,8 @@ public class PlayfabManager : MonoBehaviour
         {
             OpenPanel(notUpToDatePanel);
         }
+
+        AfterGameController.multiplier = float.Parse(result.Data["Multiplier"]);
     }
 #endregion
 
@@ -656,7 +658,7 @@ public class PlayfabManager : MonoBehaviour
                 playerMovement[i].SetStats(guns[i],i);
             }
 
-            if (!ShopController.buyed[StatController.selected])
+            if (!ShopController.buyed[StatController.selected] || StatController.selected * 25 > StatController.WaveCompleted)
             {
                 StatController.selected = 0;
                 PlayerPrefs.SetInt("selected", 0);
