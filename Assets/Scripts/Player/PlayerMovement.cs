@@ -29,11 +29,11 @@ public class PlayerMovement : MonoBehaviour
     public float cooldownIncrement = 5;
     public bool LaserSpaceship;
 
-    //Spaceship
+    [Header("Bullets")]
     public GameObject[] spawnpoints;
     public GameObject bulletPrefab;
 
-    //Audio
+    [Header("Audio")]
     public AudioSource audioSource;
     public AudioClip[] shootSounds;
 
@@ -62,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
         else 
         {
             cooldownIncrement = StatController.FireRate;
-            cooldown = Time.time + cooldownIncrement; 
+            cooldown = Time.time + cooldownIncrement + 3;
         }
     }
 
@@ -89,7 +89,8 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            transform.Translate(Vector3.right * Time.deltaTime * movementSpeed * move * 1.2f, Space.World);  //Speed boost activated
+            float speedBoostMultiplier = 1.2f;
+            transform.Translate(Vector3.right * Time.deltaTime * movementSpeed * move * speedBoostMultiplier, Space.World);  //Speed boost activated
         }
 
         // Laser ship
@@ -103,6 +104,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (StatController.selected != 3)
         {
+            // Spaceship is not a laser one
+
             for (int i = 0; i < spawnpoints.Length; i++)
             {
                 Instantiate(bulletPrefab, spawnpoints[i].transform.position, Quaternion.identity);
@@ -117,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator ActivateLaser()
     {
-        cooldown = Time.time + cooldownIncrement;
+        cooldown = Time.time + cooldownIncrement + 3;
         bulletPrefab.SetActive(true);
         yield return new WaitForSeconds(3);
         bulletPrefab.SetActive(false);

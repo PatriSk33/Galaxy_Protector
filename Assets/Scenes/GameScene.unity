@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.019833757, g: 0.008332105, b: 0.014538182, a: 1}
+  m_IndirectSpecularColor: {r: 0.023580682, g: 0.010215631, b: 0.017797843, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -753,6 +753,7 @@ RectTransform:
   - {fileID: 1751648465}
   - {fileID: 1595872899}
   - {fileID: 1977354755}
+  - {fileID: 1027442436}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -819,6 +820,9 @@ MonoBehaviour:
   amountAdded: {fileID: 1823276842}
   AfterGamePanel: {fileID: 1595872898}
   AdButton: {fileID: 516153448}
+  ultimateBoss: {fileID: 5245210144239600014, guid: 1696c136edeeb934eb892efa8b0e5117,
+    type: 3}
+  ultimateText: {fileID: 1027442437}
 --- !u!1 &508997102
 GameObject:
   m_ObjectHideFlags: 0
@@ -1680,6 +1684,8 @@ MonoBehaviour:
   - {fileID: 5245210144239600014, guid: 4818887fa8a5c3f4c8a1e1756a07601b, type: 3}
   - {fileID: 5245210144239600014, guid: 4818887fa8a5c3f4c8a1e1756a07601b, type: 3}
   enemiesOnField: []
+  numEnemiesSpawned: 0
+  maxEnemies: 0
   bossPrefab:
   - {fileID: 5245210144239600014, guid: 8fc25f52b0c701941b1e61884e350f69, type: 3}
   - {fileID: 5245210144239600014, guid: 71a296cef3080fb43a1a500e48e20f66, type: 3}
@@ -1942,6 +1948,8 @@ MonoBehaviour:
   - {fileID: 5245210144239600014, guid: 0aab451cd99f12642aed97a5d9d6191c, type: 3}
   - {fileID: 5245210144239600014, guid: 0aab451cd99f12642aed97a5d9d6191c, type: 3}
   enemiesOnField: []
+  numEnemiesSpawned: 0
+  maxEnemies: 0
   bossPrefab:
   - {fileID: 5245210144239600014, guid: 071d7d2caf26eec41a09ccdfaf0507ad, type: 3}
   - {fileID: 5245210144239600014, guid: 2ca53b291b82e7c44bc25c720b4436a0, type: 3}
@@ -2668,6 +2676,86 @@ MonoBehaviour:
   m_Sprite: {fileID: 3286163911610860551, guid: a048e00f5e4d73142ba008e0f790b4da,
     type: 3}
   m_PreserveAspect: 0
+--- !u!1 &1027442435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1027442436}
+  - component: {fileID: 1027442438}
+  - component: {fileID: 1027442437}
+  m_Layer: 5
+  m_Name: Ultimate Troll text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1027442436
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027442435}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 403385993}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 10}
+  m_SizeDelta: {x: 2000, y: 200}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1027442437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027442435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.8867924, g: 0.8867924, b: 0.8867924, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 102
+    m_FontStyle: 1
+    m_BestFit: 1
+    m_MinSize: 10
+    m_MaxSize: 110
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: You though this was the END?!
+--- !u!222 &1027442438
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027442435}
+  m_CullTransparentMesh: 1
 --- !u!1 &1076981148
 GameObject:
   m_ObjectHideFlags: 0

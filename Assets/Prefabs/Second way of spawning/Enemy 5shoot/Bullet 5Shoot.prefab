@@ -114,13 +114,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayerBullet: 0
-  isBossBullet: 1
+  isBossBullet: 0
   bulletHealth: 2
   damage: 0
   HM:
     isHoming: 0
     range: 0
-  explosion: {fileID: 0}
+  explosion: {fileID: 6963310582400106975, guid: 2ada80651cf38ed4b8fb4ad563442164,
+    type: 3}
 --- !u!54 &1884524730908342686
 Rigidbody:
   m_ObjectHideFlags: 0

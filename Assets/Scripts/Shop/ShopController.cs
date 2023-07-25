@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,8 @@ public class ShopController : MonoBehaviour
 {
     public static ShopController instance;
 
-    public Camera cam;
+    // Camera
+    [SerializeField] private Camera cam;
     int x;
 
     int Rockets;
@@ -13,15 +15,16 @@ public class ShopController : MonoBehaviour
     public int[] price = new int[4];
 
     //Textovky
-    public Text selectButtonText, priceTag;
-    public Button buyButton;
-    public Button selectButton;
+    [SerializeField] private Text selectButtonText, priceTag;
+    [SerializeField] private Button buyButton;
+    [SerializeField] private Button selectButton;
 
     //Audio
-    public AudioSource notEnoughMoneySound;
+    [SerializeField] private AudioSource notEnoughMoneySound;
 
     //Lock icon
-    public GameObject lockIcon;
+    [SerializeField] private GameObject lockIcon;
+    [SerializeField] private TextMeshProUGUI lockAmountText;
 
     private void Awake()
     {
@@ -32,6 +35,7 @@ public class ShopController : MonoBehaviour
         priceTag.gameObject.SetActive(false);
         buyButton.gameObject.SetActive(false);
         lockIcon.gameObject.SetActive(false);
+        lockAmountText.text = "";
 
         selectButtonText.text = (Rockets == StatController.selected) ? "Selected" : "Select";
     }
@@ -68,10 +72,12 @@ public class ShopController : MonoBehaviour
                 buyButton.gameObject.SetActive(false);
                 selectButton.gameObject.SetActive(false);
                 lockIcon.gameObject.SetActive(true);
+                lockAmountText.text = (Rockets * 25).ToString();
             }
             else
             {
                 lockIcon.gameObject.SetActive(false);
+                lockAmountText.text = "";
             }
         }
         else if (Rockets != 0)
@@ -99,10 +105,12 @@ public class ShopController : MonoBehaviour
                 buyButton.gameObject.SetActive(false);
                 selectButton.gameObject.SetActive(false);
                 lockIcon.gameObject.SetActive(true);
+                lockAmountText.text = (Rockets * 25).ToString();
             }
             else
             {
                 lockIcon.gameObject.SetActive(false);
+                lockAmountText.text = "";
             }
         }
     }
@@ -118,6 +126,7 @@ public class ShopController : MonoBehaviour
             selectButtonText.text = (Rockets == StatController.selected) ? "Selected" : "Select";
             priceTag.gameObject.SetActive(false);
             lockIcon.gameObject.SetActive(false);
+            lockAmountText.text = "";
         }
         else if(Rockets != 3)
         {
@@ -144,10 +153,12 @@ public class ShopController : MonoBehaviour
                 buyButton.gameObject.SetActive(false);
                 selectButton.gameObject.SetActive(false);
                 lockIcon.gameObject.SetActive(true);
+                lockAmountText.text = (Rockets * 25).ToString();
             }
             else
             {
                 lockIcon.gameObject.SetActive(false);
+                lockAmountText.text = "";
             }
         }
     }

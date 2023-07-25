@@ -8,11 +8,11 @@ public class ShopActiver : MonoBehaviour
     public void GoToShop()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Shop");
+        Loader.Load(Loader.Scene.ShopScene);
     }
     public void GoToHome()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(0);
+        Loader.Load(Loader.Scene.MainMenuScene);
     }
 }

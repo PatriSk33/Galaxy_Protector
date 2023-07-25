@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 3942789738159019070}
   - component: {fileID: 6352370873206976676}
   - component: {fileID: 2250252280414317333}
+  - component: {fileID: -657858315006460250}
   m_Layer: 0
   m_Name: UFO Boss 10 Boss
   m_TagString: Enemy
@@ -195,7 +196,7 @@ Transform:
   m_GameObject: {fileID: 5245210144239600014}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 34.12}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2556125236856710268}
@@ -245,13 +246,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e80c9fc4e01f044aa1ccdf19d57f641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 8605804911744701356, guid: e5187855d15f8db4594b1f225bae8afa,
+  bulletPrefab: {fileID: 8605804911744701356, guid: 0bc452277f238e142b21d83acb0b2238,
     type: 3}
-  health: 375
-  damage: 12
-  fireRate: 1.3
-  amountOfMoney: 325
-  enemyIndex: 7
+  health: 300
+  damage: 11
+  fireRate: 1.7
+  amountOfMoney: 300
+  enemyIndex: 6
   laserIn: 0
   explosion: {fileID: 6963310582400106975, guid: 2ada80651cf38ed4b8fb4ad563442164,
     type: 3}
@@ -352,6 +353,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &-657858315006460250
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5245210144239600014}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: af24ca77cb2795c4cbc944dcd26f0d66, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5846651746331393877
 GameObject:
   m_ObjectHideFlags: 0

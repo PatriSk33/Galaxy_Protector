@@ -35,7 +35,7 @@ public class GameplayUIButtons : MonoBehaviour
         Time.timeScale = 1.0f;
         pausePanel.SetActive(false);
         AfterGameController.addedMoney = 0;
-        SceneManager.LoadScene(0);
+        Loader.Load(Loader.Scene.MainMenuScene);
     }
 
     public void Pause()
@@ -73,7 +73,7 @@ public class GameplayUIButtons : MonoBehaviour
     {
         canRevive = false;
         RevivePanel.SetActive(false);
-        StatController.Health = 10;
+        StatController.Health = StatController.MaxHealth / 5;
         spaceshipChooser.ActivateSpaceship();
     }
 

@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 3942789738159019070}
   - component: {fileID: 6352370873206976676}
   - component: {fileID: -3723725890096778123}
+  - component: {fileID: -8967610612615646173}
   m_Layer: 0
   m_Name: UFO Easy 9
   m_TagString: Enemy
@@ -248,7 +249,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8605804911744701356, guid: 6be924adb69395f43ab17cfe34b58bcb,
     type: 3}
   health: 24
-  damage: 3
+  damage: 2
   fireRate: 2
   amountOfMoney: 5
   enemyIndex: 1
@@ -352,6 +353,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &-8967610612615646173
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5245210144239600014}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: af24ca77cb2795c4cbc944dcd26f0d66, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5846651746331393877
 GameObject:
   m_ObjectHideFlags: 0

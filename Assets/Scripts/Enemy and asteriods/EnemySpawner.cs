@@ -40,8 +40,8 @@ public class EnemySpawner : MonoBehaviour
     private float spawnDelay = 2f; // Delay between enemy spawns
     private float spawnDelayRandomThings = 13f; // Delay between random things spawns
     private int xRange = 30; //Range where can enemies spawn on X axis
-    private int numEnemiesSpawned = 0; //How many Enemies are already spawned
-    private int maxEnemies; // Maximum number of enemies to spawn
+    [HideInInspector] public int numEnemiesSpawned = 0; //How many Enemies are already spawned
+    [HideInInspector] public int maxEnemies; // Maximum number of enemies to spawn
 
     //Boss
     [Header("Boss")]
@@ -84,6 +84,7 @@ public class EnemySpawner : MonoBehaviour
         if (enemiesOnField.Count == 0)
         {
             StopCoroutine("Wait");
+            StartCoroutine(SpawnEnemy());
         }
     }
 
@@ -118,7 +119,7 @@ public class EnemySpawner : MonoBehaviour
         bool isBossWave = (StatController.Wave % 10 == 0) && (numEnemiesSpawned == maxEnemies - 1);
         if (isBossWave)
         {
-            StartCoroutine(Wait(30, true));
+            StartCoroutine(Wait(60, true));
             yield break;
         }
 
@@ -132,7 +133,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (!isBossWave && numEnemiesSpawned % 8 == 0 && numEnemiesSpawned > 0)
         {
-            StartCoroutine(Wait(30, false));
+            StartCoroutine(Wait(45, false));
         }
         else
         {
@@ -145,6 +146,7 @@ public class EnemySpawner : MonoBehaviour
     {
         StartCoroutine(SpawnRandomThing());
     }
+
     IEnumerator SpawnRandomThing()
     {
         dangerMark.SetActive(true);         //Activate
@@ -158,13 +160,13 @@ public class EnemySpawner : MonoBehaviour
         Instantiate(randomThingsPrefabs[Index], new Vector3(xP, -1.5f, 70), new Quaternion(0, 180, 0, 0));  //Shoot
     }
 
-
     IEnumerator Wait(float waitTime, bool isBossWave)
     {
         if (enemiesOnField.Count > 0)
         {
             yield return new WaitForSeconds(waitTime);
         }
+
         if (isBossWave)
         {
             int bossIndex = (StatController.Wave / 10) - 1;
@@ -176,14 +178,16 @@ public class EnemySpawner : MonoBehaviour
                 numEnemiesSpawned++;
                 enemiesOnField.Add(enemyObject);
             }
+
             yield break;
         }
+
         StartCoroutine(SpawnEnemy());
     }
 
     public void CheckEnemies()
     {
-        if (enemiesOnField.Count == 0 && numEnemiesSpawned == maxEnemies)
+        if (enemiesOnField.Count == 0 && numEnemiesSpawned >= maxEnemies)
         {
             if (StatController.Wave == StatController.WaveCompleted)
             {
@@ -196,6 +200,7 @@ public class EnemySpawner : MonoBehaviour
                     StatController.instance.finished = true;
                 }
             }
+
             StatController.instance.Save();
             AfterGameController.won = true;
             AfterGameController.instance.ShowPanel();
@@ -207,12 +212,12 @@ public class EnemySpawner : MonoBehaviour
         if (StatController.Wave < 100 && StatController.Wave >= 1)
         {
             maxEnemies = 1 + StatController.Wave;
-            spawnDelayRandomThings = 13 - (StatController.Wave - 1) / 10;
+            spawnDelayRandomThings = 15 - (StatController.Wave - 1) / 10;
         }
         else if (StatController.Wave == 100)
         {
-            maxEnemies = 200;
-            spawnDelayRandomThings = 3;
+            maxEnemies = 150;
+            spawnDelayRandomThings = 5;
         }
     }
 }

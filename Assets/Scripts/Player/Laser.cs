@@ -22,6 +22,7 @@ public class Laser : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Enemy"))
