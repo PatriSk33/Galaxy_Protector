@@ -13,7 +13,7 @@ public class GunStats
 public class StatController : MonoBehaviour
 {
     //instance
-    public static StatController instance;
+    public static StatController Instance { get; private set; }
 
     //Player
     public static float Damage;
@@ -52,7 +52,7 @@ public class StatController : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
 
         timesPlayed = PlayerPrefs.GetInt("timesPlayed", 0);
         selected = PlayerPrefs.GetInt("selected", 0);
@@ -65,7 +65,7 @@ public class StatController : MonoBehaviour
 
     private void Start()
     {
-        clientConnected = isConnected();
+        clientConnected = isConnectedToWifif();
         if (clientConnected)
         {
             OnStart();
@@ -101,7 +101,7 @@ public class StatController : MonoBehaviour
         UpdateText();
     }
 
-    bool isConnected()
+    bool isConnectedToWifif()
     {
         if (Application.internetReachability == NetworkReachability.NotReachable) return false;
         else return true;

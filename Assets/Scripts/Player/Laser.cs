@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
-    public static Laser instance;
+    public static Laser Instance { get; private set; }
+
     public List<Collider> colliders = new List<Collider>();
     private void OnTriggerEnter(Collider other)
     {
@@ -17,7 +18,7 @@ public class Laser : MonoBehaviour
         {
             Destroy(other.gameObject);
         }
-        if (other.tag == "Bullet" && !other.gameObject.GetComponent<GoForward>().isBossBullet)
+        if (other.tag == "Bullet" && !other.gameObject.GetComponent<BulletController>().IsBossBullet())
         {
             Destroy(other.gameObject);
         }
@@ -29,7 +30,6 @@ public class Laser : MonoBehaviour
         {
             other.gameObject.GetComponent<EnemyController>().laserIn = false;
             colliders.Remove(other);
-            Debug.Log("Disabled");
         }
     }
 
@@ -46,6 +46,6 @@ public class Laser : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 }

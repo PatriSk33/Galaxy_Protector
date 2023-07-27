@@ -86,8 +86,8 @@ public class SpinningWheel : MonoBehaviour
             spinButtonText.text = "Spin";
 
             StatController.Money += wheelPiece.Amount;
-            StatController.instance.Save();
-            StatController.instance.UpdateText();
+            StatController.Instance.Save();
+            StatController.Instance.UpdateText();
         });
         pickerWheel.Spin();
     }

@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GoForward : MonoBehaviour
+public class BulletController : MonoBehaviour
 {
     private float lifeTime = 4.5f;
     public bool isPlayerBullet, isBossBullet;
     [HideInInspector] public float bulletHealth = 2;
-    [HideInInspector]public float damage;   // Enemy Damage
+    [HideInInspector] public float damage;   // Enemy Damage
 
     [Serializable] public struct HomingBullet
     {
@@ -24,9 +24,9 @@ public class GoForward : MonoBehaviour
     {
         if (HM.isHoming)
         {
-            if (Vector3.Distance(transform.position, PlayerMovement.curPos) < HM.range)
+            if (Vector3.Distance(transform.position, Player.curPos) < HM.range)
             {
-                transform.LookAt(PlayerMovement.curPos);
+                transform.LookAt(Player.curPos);
             }
             HM.isHoming = false;
         }
@@ -71,10 +71,20 @@ public class GoForward : MonoBehaviour
 
             Destroy(gameObject);
         }
-        else if (col.tag == "Bullet" && isPlayerBullet && !col.gameObject.GetComponent<GoForward>().isPlayerBullet && !col.gameObject.GetComponent<GoForward>().isBossBullet)
+        else if (col.tag == "Bullet" && isPlayerBullet && !col.gameObject.GetComponent<BulletController>().isPlayerBullet && !col.gameObject.GetComponent<BulletController>().isBossBullet)
         {
-            col.GetComponent<GoForward>().bulletHealth -= StatController.Damage;
-            bulletHealth -= col.GetComponent<GoForward>().damage;
+            col.GetComponent<BulletController>().bulletHealth -= StatController.Damage;
+            bulletHealth -= col.GetComponent<BulletController>().damage;
         }
+    }
+
+    public bool IsPlayerBullet()
+    {
+        return isPlayerBullet;
+    }
+
+    public bool IsBossBullet()
+    {
+        return isBossBullet;
     }
 }

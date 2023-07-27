@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class GameplayUIButtons : MonoBehaviour
 {
-    public static GameplayUIButtons instance;
-    public rozhodovac spaceshipChooser;
+    public static GameplayUIButtons Instance { get; private set; }
+    public SetupSpaceship spaceshipChooser;
     float curRot = 0;
 
     public void Awake()
     {
-        instance = this;
+        Instance = this;
         canRevive = true;
     }
 
@@ -82,7 +82,7 @@ public class GameplayUIButtons : MonoBehaviour
     public void OpenAfterGame()
     {
         AfterGameController.won = false;
-        AfterGameController.instance.ShowPanel();
+        AfterGameController.Instance.ShowPanel();
     }
 
     public void DoubleMoneyAd()

@@ -4,7 +4,7 @@ using static PowerUp;
 
 public class SpaceshipController : MonoBehaviour
 {
-    public static SpaceshipController instance;
+    public static SpaceshipController Instance { get; private set; }
 
     [HideInInspector] public bool isSpeedBoostActive = false;
     [HideInInspector] public bool isShieldActive = false;
@@ -14,7 +14,7 @@ public class SpaceshipController : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
     private void Start()
@@ -31,14 +31,14 @@ public class SpaceshipController : MonoBehaviour
 
     public void ApplyUltraFireRate(float duration)
     {
-        if (PlayerMovement.instance.LaserSpaceship)
+        if (Player.Instance.IsLaserSpaceship())
         {
-            PlayerMovement.instance.cooldownIncrement /= 2; 
+            Player.Instance.cooldownIncrement /= 2; 
         }
         else
         {
-            PlayerMovement.instance.CancelInvoke("Shoot");
-            PlayerMovement.instance.InvokeRepeating("Shoot", 0, StatController.FireRate / 2);
+            Player.Instance.CancelInvoke("Shoot");
+            Player.Instance.InvokeRepeating("Shoot", 0, StatController.FireRate / 2);
         }
 
         StartCoroutine(DeactivatePowerUp(duration, PowerUpType.UltraFireRate));
@@ -69,8 +69,15 @@ public class SpaceshipController : MonoBehaviour
 
             case PowerUpType.UltraFireRate:
                 // Restore the original fire rate
-                PlayerMovement.instance.CancelInvoke("Shoot");
-                PlayerMovement.instance.InvokeRepeating("Shoot", 0, StatController.FireRate);
+                if (Player.Instance.IsLaserSpaceship())
+                {
+                    Player.Instance.cooldownIncrement *= 2;
+                }
+                else
+                {
+                    Player.Instance.CancelInvoke("Shoot");
+                    Player.Instance.InvokeRepeating("Shoot", 0, StatController.FireRate);
+                }
                 break;
 
             case PowerUpType.Shield:

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class rozhodovac : MonoBehaviour
+public class SetupSpaceship : MonoBehaviour
 {
-    public GameObject[] spaceshipPrefab;
+    public GameObject[] spaceshipPrefabs;
 
     private void Start()
     {
@@ -12,15 +12,15 @@ public class rozhodovac : MonoBehaviour
     }
     public void ActivateSpaceship()
     {
-        for (int i = 0; i < spaceshipPrefab.Length; i++)
+        for (int i = 0; i < spaceshipPrefabs.Length; i++)
         {
             if (i == StatController.selected)
             {
-                spaceshipPrefab[i].SetActive(true);
+                spaceshipPrefabs[i].SetActive(true);
             }
             else
             {
-                spaceshipPrefab[i].SetActive(false);
+                spaceshipPrefabs[i].SetActive(false);
             }
         }
     }

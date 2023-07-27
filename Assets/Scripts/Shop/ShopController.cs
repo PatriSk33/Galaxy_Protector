@@ -185,7 +185,7 @@ public class ShopController : MonoBehaviour
                 priceTag.gameObject.SetActive(false);
                 selectButtonText.text = "Select";
 
-                StatController.instance.Save();
+                StatController.Instance.Save();
                 PlayfabManager.Instance.SaveGuns();
 
                 LevelPlayAds.Instance.ShowFullSizeAd();
@@ -199,8 +199,8 @@ public class ShopController : MonoBehaviour
         { 
             StatController.selected = Rockets;
             selectButtonText.text = "Selected";
-            StatController.instance.Save();
-            StatController.instance.UpdateStats();
+            StatController.Instance.Save();
+            StatController.Instance.UpdateStats();
         }
         else
         {

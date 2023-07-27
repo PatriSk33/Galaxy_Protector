@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class AfterGameController : MonoBehaviour
 {
-    public static AfterGameController instance;
+    public static AfterGameController Instance { get; private set; }
 
     public Text ifCompleted, amountAdded;
     public GameObject AfterGamePanel;
@@ -20,15 +19,15 @@ public class AfterGameController : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
     public void Continue()
     {
-        if (StatController.Wave == 100 && EnemySpawner.Instance.numEnemiesSpawned == EnemySpawner.Instance.maxEnemies) 
+        if (StatController.Wave == 100 && EnemySpawner.Instance.GetNumOfEnemiesSpawned() == EnemySpawner.Instance.GetMaxEnemiesAmount()) 
         {
             GameObject enemy = Instantiate(ultimateBoss,new Vector3(0, 0, 48), Quaternion.identity);
-            EnemySpawner.Instance.numEnemiesSpawned++;
+            EnemySpawner.Instance.IncreaseNumOfEnemiesSpawned();
             EnemySpawner.Instance.enemiesOnField.Add(enemy);
 
             StartCoroutine(UltimateText());
@@ -44,7 +43,7 @@ public class AfterGameController : MonoBehaviour
 
         StatController.timesPlayed++;
         StatController.Wave++;
-        StatController.instance.Save();
+        StatController.Instance.Save();
         Time.timeScale = 1;
         Loader.Load(Loader.Scene.MainMenuScene);
     }
@@ -81,6 +80,8 @@ public class AfterGameController : MonoBehaviour
         ultimateText.text = "This is the Final Boss!";
         yield return new WaitForSeconds(0.5f);
         ultimateText.text = "Good Luck!";
+        yield return new WaitForSeconds(0.5f);
+        ultimateText.text = "You're gonna need it!";
         Time.timeScale = 1;
         ultimateText.gameObject.SetActive(false);
     }

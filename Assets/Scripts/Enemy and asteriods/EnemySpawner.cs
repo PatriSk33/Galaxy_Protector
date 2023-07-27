@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public static EnemySpawner Instance;
+    public static EnemySpawner Instance { get; private set; }
 
     [Header("Random things to shoot at player")]
     public List<GameObject> randomThingsPrefabs;
@@ -40,8 +40,8 @@ public class EnemySpawner : MonoBehaviour
     private float spawnDelay = 2f; // Delay between enemy spawns
     private float spawnDelayRandomThings = 13f; // Delay between random things spawns
     private int xRange = 30; //Range where can enemies spawn on X axis
-    [HideInInspector] public int numEnemiesSpawned = 0; //How many Enemies are already spawned
-    [HideInInspector] public int maxEnemies; // Maximum number of enemies to spawn
+    private int numEnemiesSpawned = 0; //How many Enemies are already spawned
+    private int maxEnemies; // Maximum number of enemies to spawn
 
     //Boss
     [Header("Boss")]
@@ -95,7 +95,7 @@ public class EnemySpawner : MonoBehaviour
         GameObject enemyObject = null;
         int prefabIndex;
 
-        if (numEnemiesSpawned >= maxEnemies)
+        if (GetNumOfEnemiesSpawned() >= GetMaxEnemiesAmount())
         {
             yield break;
         }
@@ -116,7 +116,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
         // Check if the current wave is a boss wave
-        bool isBossWave = (StatController.Wave % 10 == 0) && (numEnemiesSpawned == maxEnemies - 1);
+        bool isBossWave = (StatController.Wave % 10 == 0) && (GetNumOfEnemiesSpawned() == GetMaxEnemiesAmount() - 1);
         if (isBossWave)
         {
             StartCoroutine(Wait(60, true));
@@ -127,11 +127,11 @@ public class EnemySpawner : MonoBehaviour
 
         if (enemy != null)
         {
-            numEnemiesSpawned++;
+            IncreaseNumOfEnemiesSpawned();
             enemiesOnField.Add(enemyObject);
         }
 
-        if (!isBossWave && numEnemiesSpawned % 8 == 0 && numEnemiesSpawned > 0)
+        if (!isBossWave && GetNumOfEnemiesSpawned() % 8 == 0 && GetNumOfEnemiesSpawned() > 0)
         {
             StartCoroutine(Wait(45, false));
         }
@@ -149,15 +149,18 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnRandomThing()
     {
-        dangerMark.SetActive(true);         //Activate
+        // Danger Mark
+        dangerMark.SetActive(true);         // Activate
         yield return new WaitForSeconds(1);
-        dangerMark.SetActive(false);        //Deactivate
+        dangerMark.SetActive(false);        // Deactivate
         yield return new WaitForSeconds(0.5f);
 
+        // Get index and X position
         int Index = Random.Range(0, randomThingsPrefabs.Count);
         int xP = Random.Range(-xRange, xRange);
 
-        Instantiate(randomThingsPrefabs[Index], new Vector3(xP, -1.5f, 70), new Quaternion(0, 180, 0, 0));  //Shoot
+        // Spawn
+        Instantiate(randomThingsPrefabs[Index], new Vector3(xP, -1.5f, 70), new Quaternion(0, 180, 0, 0));
     }
 
     IEnumerator Wait(float waitTime, bool isBossWave)
@@ -197,18 +200,20 @@ public class EnemySpawner : MonoBehaviour
                 }
                 else if (StatController.Wave == 100)
                 {
-                    StatController.instance.finished = true;
+                    StatController.Instance.finished = true;
                 }
             }
 
-            StatController.instance.Save();
+            StatController.Instance.Save();
             AfterGameController.won = true;
-            AfterGameController.instance.ShowPanel();
+            AfterGameController.Instance.ShowPanel();
         }
     }
 
     private void UpdateMaxEnemiesCount()
     {
+        numEnemiesSpawned = 0;
+
         if (StatController.Wave < 100 && StatController.Wave >= 1)
         {
             maxEnemies = 1 + StatController.Wave;
@@ -220,4 +225,20 @@ public class EnemySpawner : MonoBehaviour
             spawnDelayRandomThings = 5;
         }
     }
+
+    public int GetMaxEnemiesAmount()
+    {
+        return maxEnemies;
+    }
+
+    public int GetNumOfEnemiesSpawned()
+    {
+        return numEnemiesSpawned;
+    }
+
+    public void IncreaseNumOfEnemiesSpawned()
+    {
+        numEnemiesSpawned++;
+    }
+
 }

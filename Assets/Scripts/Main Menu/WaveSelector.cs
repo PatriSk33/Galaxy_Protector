@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class WaveSelector : MonoBehaviour
 {
-    public InputField waveInput;
+    [SerializeField] private InputField waveInput;
 
     public void Select()
     {
@@ -14,18 +14,18 @@ public class WaveSelector : MonoBehaviour
             if (int.Parse(waveInput.text) <= StatController.WaveCompleted && int.Parse(waveInput.text) > 0)
             {
                 StatController.Wave = int.Parse(waveInput.text);
-                StatController.instance.UpdateText();
+                StatController.Instance.UpdateText();
             }
             else
             {
                 StatController.Wave = StatController.WaveCompleted;
-                StatController.instance.UpdateText();
+                StatController.Instance.UpdateText();
             }
         }
         else
         {
             StatController.Wave = StatController.WaveCompleted;
-            StatController.instance.UpdateText();
+            StatController.Instance.UpdateText();
         }
     }
 }

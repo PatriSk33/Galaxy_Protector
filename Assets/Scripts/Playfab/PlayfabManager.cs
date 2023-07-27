@@ -114,7 +114,7 @@ public class PlayfabManager : MonoBehaviour
             ClosePanel(noWifiPanel);
             OnOpen();
             yield return new WaitForSeconds(2);
-            StatController.instance.OnStart();
+            StatController.Instance.OnStart();
         }
     }
 
@@ -174,8 +174,8 @@ public class PlayfabManager : MonoBehaviour
             StatController.Wave = StatController.WaveCompleted;
 
             //Update the text and things to the new one
-            StatController.instance.UpdateStats();
-            StatController.instance.UpdateText();
+            StatController.Instance.UpdateStats();
+            StatController.Instance.UpdateText();
             UpgradeManager.Instance.UpdatePriceTag();
 
             if (SceneManager.GetActiveScene().buildIndex == 0)
@@ -626,7 +626,7 @@ public class PlayfabManager : MonoBehaviour
 
     #region Guns
 
-    [Tooltip("Input here all the guns from game")]public PlayerMovement[] playerMovement;
+    [Tooltip("Input here all the guns from game")]public Player[] playerMovement;
     public void SaveGuns()
     {
         List<Gun> guns = new List<Gun>();
@@ -665,8 +665,8 @@ public class PlayfabManager : MonoBehaviour
             }
 
             UpgradeManager.Instance.UpdatePriceTag();
-            StatController.instance.UpdateStats();
-            StatController.instance.UpdateText();
+            StatController.Instance.UpdateStats();
+            StatController.Instance.UpdateText();
         }
     }
     #endregion

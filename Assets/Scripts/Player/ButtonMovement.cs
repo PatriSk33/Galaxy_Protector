@@ -9,16 +9,16 @@ public class ButtonMovement : MonoBehaviour
             Vector3 touchPosition = Input.GetTouch(0).position;
             if (touchPosition.x > Screen.width * 0.5f)
             {
-                PlayerMovement.move = new Vector2(1, 0);
+                Player.move = new Vector2(1, 0);
             }
             else
             {
-                PlayerMovement.move = new Vector2(-1, 0);
+                Player.move = new Vector2(-1, 0);
             }
         }
         else
         {
-            PlayerMovement.move = new Vector2(0, 0);
+            Player.move = new Vector2(0, 0);
         }
     }
 }

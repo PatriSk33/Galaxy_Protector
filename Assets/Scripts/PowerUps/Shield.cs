@@ -8,10 +8,11 @@ public class Shield : MonoBehaviour
     {
         if (other.CompareTag("Bullet"))
         {
-            GoForward bulletController = other.GetComponent<GoForward>();
-            if (bulletController != null && !bulletController.isPlayerBullet)
+            BulletController bulletController = other.GetComponent<BulletController>();
+            if (bulletController != null && !bulletController.IsPlayerBullet())
             {
-                Destroy(other.gameObject); // Destroy the enemy bullet
+                // Its Enemy Bullet
+                Destroy(other.gameObject);
             }
         }
         else if ( other.CompareTag("Asteroid"))

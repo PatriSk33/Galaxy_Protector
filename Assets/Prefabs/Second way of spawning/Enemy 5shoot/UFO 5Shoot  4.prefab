@@ -179,9 +179,9 @@ GameObject:
   - component: {fileID: 3942789738159019070}
   - component: {fileID: 6352370873206976676}
   - component: {fileID: 2250252280414317333}
-  - component: {fileID: -2278723304566888645}
+  - component: {fileID: 9089170485941737451}
   m_Layer: 0
-  m_Name: UFO Boss 7
+  m_Name: UFO 5Shoot  4
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,8 +248,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 8605804911744701356, guid: b170e2cedd984b04e8e18dc68f97ddae,
     type: 3}
-  health: 123
-  damage: 10
+  health: 117
+  damage: 9
   fireRate: 1.7
   amountOfMoney: 25
   enemyIndex: 5
@@ -353,7 +353,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!95 &-2278723304566888645
+--- !u!95 &9089170485941737451
 Animator:
   serializedVersion: 4
   m_ObjectHideFlags: 0

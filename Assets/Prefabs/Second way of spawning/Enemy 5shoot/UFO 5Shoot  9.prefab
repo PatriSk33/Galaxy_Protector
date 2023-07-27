@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 2250252280414317333}
   - component: {fileID: 8894297130795012634}
   m_Layer: 0
-  m_Name: UFO Boss 9
+  m_Name: UFO 5Shoot  9
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

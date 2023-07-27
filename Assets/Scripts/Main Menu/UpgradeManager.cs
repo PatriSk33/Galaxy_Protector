@@ -39,9 +39,9 @@ public class UpgradeManager : MonoBehaviour
 
                     UpdatePriceTag();
 
-                    StatController.instance.UpdateText();
-                    StatController.instance.UpdateStats();
-                    StatController.instance.Save();
+                    StatController.Instance.UpdateText();
+                    StatController.Instance.UpdateStats();
+                    StatController.Instance.Save();
                     PlayfabManager.Instance.SaveGuns();
 
                     powerup.Play();
@@ -61,9 +61,9 @@ public class UpgradeManager : MonoBehaviour
 
                     UpdatePriceTag();
 
-                    StatController.instance.UpdateStats();
-                    StatController.instance.UpdateText();
-                    StatController.instance.Save();
+                    StatController.Instance.UpdateStats();
+                    StatController.Instance.UpdateText();
+                    StatController.Instance.Save();
                     PlayfabManager.Instance.SaveGuns();
 
                     powerup.Play();
@@ -89,9 +89,9 @@ public class UpgradeManager : MonoBehaviour
 
                     UpdatePriceTag();
 
-                    StatController.instance.UpdateStats();
-                    StatController.instance.UpdateText();
-                    StatController.instance.Save();
+                    StatController.Instance.UpdateStats();
+                    StatController.Instance.UpdateText();
+                    StatController.Instance.Save();
                     PlayfabManager.Instance.SaveGuns();
 
                     powerup.Play();
@@ -111,9 +111,9 @@ public class UpgradeManager : MonoBehaviour
 
                     UpdatePriceTag();
 
-                    StatController.instance.UpdateStats();
-                    StatController.instance.UpdateText();
-                    StatController.instance.Save();
+                    StatController.Instance.UpdateStats();
+                    StatController.Instance.UpdateText();
+                    StatController.Instance.Save();
                     PlayfabManager.Instance.SaveGuns();
 
                     powerup.Play();

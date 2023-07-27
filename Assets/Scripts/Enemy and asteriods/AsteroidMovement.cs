@@ -12,7 +12,7 @@ public class AsteroidMovement : MonoBehaviour
     private float maxSpeed = 10f;
     private float rotationSpeed;
 
-    //Camera Shake
+    // Camera Shake
     public float shakeDuration = 0.2f;
     public float shakeIntensity = 0.1f;
 
@@ -73,18 +73,18 @@ public class AsteroidMovement : MonoBehaviour
     {
         isShaking = true;
 
-        originalCameraPosition = mainCamera.transform.position;
+        originalCameraPosition = mainCamera.transform.localPosition;
         float timeElapsed = 0f;
 
         while (timeElapsed < shakeDuration)
         {
             Vector3 randomOffset = Random.insideUnitSphere * shakeIntensity;
-            mainCamera.transform.position = originalCameraPosition + randomOffset;
+            mainCamera.transform.localPosition = originalCameraPosition + randomOffset;
             timeElapsed += Time.deltaTime;
             yield return null;
         }
 
-        mainCamera.transform.position = originalCameraPosition;
+        mainCamera.transform.localPosition = originalCameraPosition;
         isShaking = false;
     }
 }

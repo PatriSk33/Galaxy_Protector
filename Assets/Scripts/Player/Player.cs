@@ -15,9 +15,9 @@ public class Gun
         this.isBuyed = isBuyed;
     }
 }
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
-    public static PlayerMovement instance;
+    public static Player Instance { get; private set; } 
 
     public static Vector2 move;
     public static Vector3 curPos;
@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private float xRange = 30;
     private float cooldown;
     public float cooldownIncrement = 5;
-    public bool LaserSpaceship;
+    private bool isLaserSpaceship;
 
     [Header("Bullets")]
     public GameObject[] spawnpoints;
@@ -51,26 +51,38 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
 
         
-        if (!LaserSpaceship)
+        if (!isLaserSpaceship)
         {
             fireRate = StatController.FireRate;
             InvokeRepeating("Shoot", 1, fireRate);
         }
         else 
         {
-            cooldownIncrement = StatController.FireRate;
-            cooldown = Time.time + cooldownIncrement + 3;
+            cooldownIncrement = StatController.FireRate + 3;
+            cooldown = Time.time + cooldownIncrement;
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         curPos = transform.position;
 
+        CheckBarriers();
+
+        HandleMovement();
+
+        // Laser ship
+        if (isLaserSpaceship && cooldown < Time.time)
+        {
+            StartCoroutine(ActivateLaser());
+        }
+    }
+
+    private void CheckBarriers()
+    {
         // Check for left and right bounds
         if (transform.position.x < -xRange)
         {
@@ -81,9 +93,12 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
         }
+    }
 
+    private void HandleMovement()
+    {
         // Move left and Right
-        if (!SpaceshipController.instance.isSpeedBoostActive)
+        if (!SpaceshipController.Instance.isSpeedBoostActive)
         {
             transform.Translate(Vector3.right * Time.deltaTime * movementSpeed * move, Space.World);
         }
@@ -91,12 +106,6 @@ public class PlayerMovement : MonoBehaviour
         {
             float speedBoostMultiplier = 1.2f;
             transform.Translate(Vector3.right * Time.deltaTime * movementSpeed * move * speedBoostMultiplier, Space.World);  //Speed boost activated
-        }
-
-        // Laser ship
-        if (LaserSpaceship && cooldown < Time.time)
-        {
-            StartCoroutine(ActivateLaser());
         }
     }
 
@@ -120,9 +129,14 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator ActivateLaser()
     {
-        cooldown = Time.time + cooldownIncrement + 3;
+        cooldown = Time.time + cooldownIncrement;
         bulletPrefab.SetActive(true);
         yield return new WaitForSeconds(3);
         bulletPrefab.SetActive(false);
+    }
+
+    public bool IsLaserSpaceship()
+    {
+        return isLaserSpaceship;
     }
 }

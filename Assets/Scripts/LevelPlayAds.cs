@@ -165,15 +165,15 @@ public class LevelPlayAds : MonoBehaviour
             Debug.Log("Double money ad completed");
             // Add your custom logic here 
             AfterGameController.addedMoney *= 2;
-            AfterGameController.instance.UpdateText();
-            AfterGameController.instance.AdButton.gameObject.SetActive(false);
+            AfterGameController.Instance.UpdateText();
+            AfterGameController.Instance.AdButton.gameObject.SetActive(false);
         }
         if (placement != null && placement.getPlacementName() == "Revive_Player")
         {
             // Rewards for Button 1
             Debug.Log("Revived Ad Completed");
             // Add your custom logic here 
-            GameplayUIButtons.instance.AfterAdRevive();
+            GameplayUIButtons.Instance.AfterAdRevive();
         }
         else
         {
