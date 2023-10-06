@@ -15,7 +15,7 @@ MonoBehaviour:
   TitleId: E951C
   DeveloperSecretKey: QF7P89KEMGXMQYNG544ASFAFU7KPJEJRFXRPIRTOKCGG1TPBPB
   ProductionEnvironmentUrl: 
-  RequestType: 2
+  RequestType: 0
   DisableDeviceInfo: 0
   DisableFocusTimeCollection: 0
   RequestTimeout: 2000

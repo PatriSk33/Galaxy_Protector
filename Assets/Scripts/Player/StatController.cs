@@ -48,7 +48,7 @@ public class StatController : MonoBehaviour
     [SerializeField]private float[] startingDamage, startingFireRate;
 
     //Network
-    private bool clientConnected; // Wifi ON
+    private bool clientConnected = false; // Wifi ON
 
     private void Awake()
     {
@@ -158,7 +158,7 @@ public class StatController : MonoBehaviour
         damage = gunStats[selected].startingDamage + (DamageLvl[selected] * 0.8f);
 
         FireRate = Mathf.Clamp(fireRate, 0.3f, 1.8f);
-        Damage = Mathf.Clamp(damage, 2f, 18.8f);
+        Damage = Mathf.Clamp(damage, 2f, 20f);
     }
 
 

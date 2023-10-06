@@ -251,7 +251,7 @@ MonoBehaviour:
   health: 1000
   damage: 11
   fireRate: 1
-  amountOfMoney: 500
+  amountOfMoney: 5000
   enemyIndex: 7
   laserIn: 0
   explosion: {fileID: 6963310582400106975, guid: 2ada80651cf38ed4b8fb4ad563442164,

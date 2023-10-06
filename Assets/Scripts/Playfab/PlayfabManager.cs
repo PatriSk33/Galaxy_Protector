@@ -202,6 +202,9 @@ public class PlayfabManager : MonoBehaviour
 
     public void SendDataToDiscord(bool log)
     {
+        string buildNumber = Application.version;
+        if (!buildNumber.EndsWith("d")) return;
+
         string msg;
         if (log)
         {
@@ -238,6 +241,9 @@ public class PlayfabManager : MonoBehaviour
     {
         if (pause && SceneManager.GetActiveScene().buildIndex != 0)
         {
+            string buildNumber = Application.version;
+            if (!buildNumber.EndsWith("d")) return;
+
             SendDataToDiscord(false);
         }
     }
@@ -615,7 +621,15 @@ public class PlayfabManager : MonoBehaviour
             msgOfTheDay.text = result.Data["Message"];
         }
 
-        if(Application.version != result.Data["Version"])
+        string version = Application.version;
+        string currentVersion = version;
+
+        if (version.EndsWith("d"))
+        {
+            currentVersion = version.Substring(0, version.Length - 1);
+        }
+
+        if (currentVersion != result.Data["Version"])
         {
             OpenPanel(notUpToDatePanel);
         }

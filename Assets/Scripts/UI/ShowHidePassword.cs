@@ -11,6 +11,11 @@ public class ShowHidePassword : MonoBehaviour
     private bool isPasswordVisible = false;
     private InputField.InputType previousInputType;
 
+    private void Awake()
+    {
+        OnButtonClicked();
+    }
+
     public void OnButtonClicked()
     {
         isPasswordVisible = !isPasswordVisible;

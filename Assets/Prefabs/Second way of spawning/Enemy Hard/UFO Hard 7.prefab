@@ -249,7 +249,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8605804911744701356, guid: e07244022ab3b4f44a8e4a76a417c788,
     type: 3}
   health: 99
-  damage: 8
+  damage: 7
   fireRate: 1.25
   amountOfMoney: 20
   enemyIndex: 3

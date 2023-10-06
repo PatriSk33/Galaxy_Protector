@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.021670371, g: 0.009312235, b: 0.01622176, a: 1}
+  m_IndirectSpecularColor: {r: 0.013273409, g: 0.004478678, b: 0.0066528628, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1780,8 +1780,6 @@ MonoBehaviour:
   - {fileID: 5245210144239600014, guid: 4818887fa8a5c3f4c8a1e1756a07601b, type: 3}
   - {fileID: 5245210144239600014, guid: 4818887fa8a5c3f4c8a1e1756a07601b, type: 3}
   enemiesOnField: []
-  numEnemiesSpawned: 0
-  maxEnemies: 0
   bossPrefab:
   - {fileID: 5245210144239600014, guid: 8fc25f52b0c701941b1e61884e350f69, type: 3}
   - {fileID: 5245210144239600014, guid: 71a296cef3080fb43a1a500e48e20f66, type: 3}
@@ -1924,8 +1922,6 @@ MonoBehaviour:
   - {fileID: 5245210144239600014, guid: 6f3faa76a92f01b4987d29a077b0a2fb, type: 3}
   enemyPrefabs65:
   - {fileID: 5245210144239600014, guid: bc416c879df565844a607cf0d74b1408, type: 3}
-  - {fileID: 5245210144239600014, guid: 2ca53b291b82e7c44bc25c720b4436a0, type: 3}
-  - {fileID: 5245210144239600014, guid: 2ca53b291b82e7c44bc25c720b4436a0, type: 3}
   - {fileID: 5245210144239600014, guid: 9b606d98704edba4e9c30926e239cd56, type: 3}
   - {fileID: 5245210144239600014, guid: a34c2a4b93f77314ba966b914984ddcd, type: 3}
   - {fileID: 5245210144239600014, guid: a34c2a4b93f77314ba966b914984ddcd, type: 3}
@@ -1997,8 +1993,6 @@ MonoBehaviour:
   - {fileID: 5245210144239600014, guid: 682659e5433db764dbb348c35df87b2d, type: 3}
   enemyPrefabs90:
   - {fileID: 5245210144239600014, guid: a34c2a4b93f77314ba966b914984ddcd, type: 3}
-  - {fileID: 5245210144239600014, guid: a34c2a4b93f77314ba966b914984ddcd, type: 3}
-  - {fileID: 5245210144239600014, guid: 5540688c0b89f2f43afd2ef0479eb331, type: 3}
   - {fileID: 5245210144239600014, guid: 6f3faa76a92f01b4987d29a077b0a2fb, type: 3}
   - {fileID: 5245210144239600014, guid: 6f3faa76a92f01b4987d29a077b0a2fb, type: 3}
   - {fileID: 5245210144239600014, guid: 6f3faa76a92f01b4987d29a077b0a2fb, type: 3}
@@ -2014,37 +2008,25 @@ MonoBehaviour:
   - {fileID: 5245210144239600014, guid: daac0a44a8e8b2041b3eae10ed48395a, type: 3}
   enemyPrefabs95:
   - {fileID: 5245210144239600014, guid: a34c2a4b93f77314ba966b914984ddcd, type: 3}
-  - {fileID: 5245210144239600014, guid: 5540688c0b89f2f43afd2ef0479eb331, type: 3}
-  - {fileID: 5245210144239600014, guid: 5540688c0b89f2f43afd2ef0479eb331, type: 3}
   - {fileID: 5245210144239600014, guid: 6f3faa76a92f01b4987d29a077b0a2fb, type: 3}
   - {fileID: 5245210144239600014, guid: 6f3faa76a92f01b4987d29a077b0a2fb, type: 3}
-  - {fileID: 5245210144239600014, guid: c6a7d66623e57ce48898f262aaf392f4, type: 3}
   - {fileID: 5245210144239600014, guid: 2baf88cdedbde144e9fa941476961852, type: 3}
   - {fileID: 5245210144239600014, guid: eb23dc66da072014c99e719b732b8333, type: 3}
   - {fileID: 5245210144239600014, guid: eb23dc66da072014c99e719b732b8333, type: 3}
   - {fileID: 5245210144239600014, guid: 0e34937f3d3f036438d00fd2ce113727, type: 3}
   - {fileID: 5245210144239600014, guid: 0e34937f3d3f036438d00fd2ce113727, type: 3}
   - {fileID: 5245210144239600014, guid: c09bacffed468584686097eed550c24a, type: 3}
-  - {fileID: 5245210144239600014, guid: c09bacffed468584686097eed550c24a, type: 3}
-  - {fileID: 5245210144239600014, guid: c09bacffed468584686097eed550c24a, type: 3}
   - {fileID: 5245210144239600014, guid: d3fdd07f9e703774691e1cc98e6d5fe3, type: 3}
   enemyPrefabs100:
+  - {fileID: 5245210144239600014, guid: a34c2a4b93f77314ba966b914984ddcd, type: 3}
   - {fileID: 5245210144239600014, guid: 6f3faa76a92f01b4987d29a077b0a2fb, type: 3}
-  - {fileID: 5245210144239600014, guid: 6f3faa76a92f01b4987d29a077b0a2fb, type: 3}
-  - {fileID: 5245210144239600014, guid: 5540688c0b89f2f43afd2ef0479eb331, type: 3}
-  - {fileID: 5245210144239600014, guid: c6a7d66623e57ce48898f262aaf392f4, type: 3}
-  - {fileID: 5245210144239600014, guid: eb23dc66da072014c99e719b732b8333, type: 3}
   - {fileID: 5245210144239600014, guid: eb23dc66da072014c99e719b732b8333, type: 3}
   - {fileID: 5245210144239600014, guid: eb23dc66da072014c99e719b732b8333, type: 3}
   - {fileID: 5245210144239600014, guid: c09bacffed468584686097eed550c24a, type: 3}
-  - {fileID: 5245210144239600014, guid: c09bacffed468584686097eed550c24a, type: 3}
-  - {fileID: 5245210144239600014, guid: d3fdd07f9e703774691e1cc98e6d5fe3, type: 3}
   - {fileID: 5245210144239600014, guid: d3fdd07f9e703774691e1cc98e6d5fe3, type: 3}
   - {fileID: 5245210144239600014, guid: 0aab451cd99f12642aed97a5d9d6191c, type: 3}
   - {fileID: 5245210144239600014, guid: 0aab451cd99f12642aed97a5d9d6191c, type: 3}
   enemiesOnField: []
-  numEnemiesSpawned: 0
-  maxEnemies: 0
   bossPrefab:
   - {fileID: 5245210144239600014, guid: 071d7d2caf26eec41a09ccdfaf0507ad, type: 3}
   - {fileID: 5245210144239600014, guid: 2ca53b291b82e7c44bc25c720b4436a0, type: 3}

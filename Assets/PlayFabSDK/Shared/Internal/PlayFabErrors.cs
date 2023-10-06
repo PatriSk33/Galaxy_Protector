@@ -561,6 +561,8 @@ namespace PlayFab
         NamespaceMismatch = 1559,
         InvalidServiceConfiguration = 1560,
         InvalidNamespaceMismatch = 1561,
+        LeaderboardColumnLengthMismatch = 1562,
+        InvalidStatisticScore = 1563,
         MatchmakingEntityInvalid = 2001,
         MatchmakingPlayerAttributesInvalid = 2002,
         MatchmakingQueueNotFound = 2016,
@@ -650,6 +652,7 @@ namespace PlayFab
         MultiplayerServerBuildReferencedByMatchmakingQueue = 6002,
         MultiplayerServerBuildReferencedByBuildAlias = 6003,
         MultiplayerServerBuildAliasReferencedByMatchmakingQueue = 6004,
+        PartySerializationError = 6005,
         ExperimentationExperimentStopped = 7000,
         ExperimentationExperimentRunning = 7001,
         ExperimentationExperimentNotFound = 7002,
@@ -704,6 +707,12 @@ namespace PlayFab
         LobbyNewOwnerMustBeConnected = 13009,
         LobbyCurrentOwnerStillConnected = 13010,
         LobbyMemberIsNotOwner = 13011,
+        LobbyAssociatedServerMismatch = 13012,
+        LobbyAssociatedServerNotFound = 13013,
+        LobbyAssociatedToDifferentServer = 13014,
+        LobbyServerAlreadyAssociated = 13015,
+        LobbyIsNotClientOwned = 13016,
+        LobbyDoesNotUseConnections = 13017,
         EventSamplingInvalidRatio = 14000,
         EventSamplingInvalidEventNamespace = 14001,
         EventSamplingInvalidEventName = 14002,
@@ -732,6 +741,11 @@ namespace PlayFab
         AllowNonUniquePlayerDisplayNamesDisableNotAllowed = 17001,
         PartitionedEventInvalid = 18000,
         PartitionedEventCountOverLimit = 18001,
+        ManageEventNamespaceInvalid = 18002,
+        ManageEventNameInvalid = 18003,
+        ManagedEventNotFound = 18004,
+        ManageEventsInvalidRatio = 18005,
+        ManagedEventInvalid = 18006,
         PlayerCustomPropertiesPropertyNameTooLong = 19000,
         PlayerCustomPropertiesPropertyNameIsInvalid = 19001,
         PlayerCustomPropertiesStringPropertyValueTooLong = 19002,
@@ -739,7 +753,9 @@ namespace PlayFab
         PlayerCustomPropertiesVersionMismatch = 19004,
         PlayerCustomPropertiesPropertyCountTooHigh = 19005,
         PlayerCustomPropertiesDuplicatePropertyName = 19006,
-        PlayerCustomPropertiesPropertyDoesNotExist = 19007
+        PlayerCustomPropertiesPropertyDoesNotExist = 19007,
+        AddonAlreadyExists = 19008,
+        AddonDoesntExist = 19009
     }
 
     public class PlayFabError
