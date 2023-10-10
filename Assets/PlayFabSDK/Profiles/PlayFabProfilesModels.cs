@@ -142,6 +142,10 @@ namespace PlayFab.ProfilesModels
         /// </summary>
         public string Language;
         /// <summary>
+        /// Leaderboard metadata for the entity.
+        /// </summary>
+        public string LeaderboardMetadata;
+        /// <summary>
         /// The lineage of this profile.
         /// </summary>
         public EntityLineage Lineage;
@@ -190,41 +194,37 @@ namespace PlayFab.ProfilesModels
     }
 
     [Serializable]
-    public class EntityStatisticAttributeValue : PlayFabBaseModel
+    public class EntityStatisticChildValue : PlayFabBaseModel
     {
         /// <summary>
-        /// Metadata associated with the Statistic.
+        /// Child name value, if child statistic
+        /// </summary>
+        public string ChildName;
+        /// <summary>
+        /// Child statistic metadata
         /// </summary>
         public string Metadata;
         /// <summary>
-        /// Attribute name.
+        /// Child statistic value
         /// </summary>
-        public string Name;
-        /// <summary>
-        /// Attribute Statistic scores.
-        /// </summary>
-        public List<string> Scores;
+        public int Value;
     }
 
     [Serializable]
     public class EntityStatisticValue : PlayFabBaseModel
     {
         /// <summary>
-        /// Attribute Statistic values.
+        /// Child statistic values
         /// </summary>
-        public Dictionary<string,EntityStatisticAttributeValue> AttributeStatistics;
+        public Dictionary<string,EntityStatisticChildValue> ChildStatistics;
         /// <summary>
-        /// Metadata associated with the Statistic.
+        /// Statistic metadata
         /// </summary>
         public string Metadata;
         /// <summary>
         /// Statistic name
         /// </summary>
         public string Name;
-        /// <summary>
-        /// Statistic scores
-        /// </summary>
-        public List<string> Scores;
         /// <summary>
         /// Statistic value
         /// </summary>

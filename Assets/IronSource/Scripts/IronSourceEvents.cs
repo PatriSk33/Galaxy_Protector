@@ -83,17 +83,11 @@ public class IronSourceEvents : MonoBehaviour
     [Obsolete("This API has been deprecated as of SDK 7.3.0.1", false)]
     public static event Action<string, IronSourceError> onInterstitialAdShowFailedDemandOnlyEvent;
 
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action<bool> onOfferwallAvailableEvent;
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action onOfferwallOpenedEvent;
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action<Dictionary<string, object>> onOfferwallAdCreditedEvent;
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action<IronSourceError> onGetOfferwallCreditsFailedEvent;
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action onOfferwallClosedEvent;
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action<IronSourceError> onOfferwallShowFailedEvent;
 
     [Obsolete("This API has been deprecated as of SDK 7.3.0. Please use the alternate API in IronSourceBannerEvents listener instead.", false)]
@@ -1649,7 +1643,6 @@ public class IronSourceEvents : MonoBehaviour
 
     private static event Action _onOfferwallOpenedEvent;
 
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action onOfferwallOpenedEvent
     {
         add
@@ -1679,7 +1672,6 @@ public class IronSourceEvents : MonoBehaviour
 
     private static event Action<IronSourceError> _onOfferwallShowFailedEvent;
 
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action<IronSourceError> onOfferwallShowFailedEvent
     {
         add
@@ -1710,7 +1702,6 @@ public class IronSourceEvents : MonoBehaviour
 
     private static event Action _onOfferwallClosedEvent;
 
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action onOfferwallClosedEvent
     {
         add
@@ -1740,7 +1731,6 @@ public class IronSourceEvents : MonoBehaviour
 
     private static event Action<IronSourceError> _onGetOfferwallCreditsFailedEvent;
 
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action<IronSourceError> onGetOfferwallCreditsFailedEvent
     {
         add
@@ -1772,7 +1762,6 @@ public class IronSourceEvents : MonoBehaviour
 
     private static event Action<Dictionary<string, object>> _onOfferwallAdCreditedEvent;
 
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action<Dictionary<string, object>> onOfferwallAdCreditedEvent
     {
         add
@@ -1800,7 +1789,6 @@ public class IronSourceEvents : MonoBehaviour
 
     private static event Action<bool> _onOfferwallAvailableEvent;
 
-    [Obsolete("This API call is for the ironSource Offerwall, which will soon be deprecated. Please migrate to the Tapjoy Offerwall using the 'Offerwall migration checklist'.", false)]
     public static event Action<bool> onOfferwallAvailableEvent
     {
         add

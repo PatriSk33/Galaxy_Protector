@@ -6,7 +6,6 @@ public class Loading : MonoBehaviour
 {
     private void Start()
     {
-        Time.timeScale = 1.0f;
         StartCoroutine(Load());
     }
 

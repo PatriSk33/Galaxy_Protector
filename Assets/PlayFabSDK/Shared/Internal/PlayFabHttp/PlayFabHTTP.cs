@@ -201,10 +201,6 @@ namespace PlayFab.Internal
                         reqContainer.RequestHeaders["X-EntityToken"] = authenticationContext.EntityToken;
                     break;
 #endif
-                case AuthType.TelemetryKey:
-                    if (authenticationContext != null)
-                        reqContainer.RequestHeaders["X-TelemetryKey"] = authenticationContext.TelemetryKey;
-                    break;
             }
 
             // These closures preserve the TResult generic information in a way that's safe for all the devices

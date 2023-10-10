@@ -250,7 +250,7 @@ MonoBehaviour:
     type: 3}
   health: 108
   damage: 9
-  fireRate: 2.1
+  fireRate: 1.7
   amountOfMoney: 25
   enemyIndex: 5
   laserIn: 0

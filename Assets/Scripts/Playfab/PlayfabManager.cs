@@ -65,7 +65,7 @@ public class PlayfabManager : MonoBehaviour
         {
             OnOpen();
         }
-        else if(SceneManager.GetActiveScene().buildIndex == 0)
+        else if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             Time.timeScale = 0f;
             OpenPanel(noWifiPanel);
@@ -98,7 +98,7 @@ public class PlayfabManager : MonoBehaviour
     }
 
     #region Network
-    
+
     bool isConnected()
     {
         if (Application.internetReachability == NetworkReachability.NotReachable) return false;
@@ -108,7 +108,7 @@ public class PlayfabManager : MonoBehaviour
     public IEnumerator RetryConnection()
     {
         clientConnected = isConnected();
-        if(clientConnected)
+        if (clientConnected)
         {
             Time.timeScale = 1f;
             ClosePanel(noWifiPanel);
@@ -163,7 +163,7 @@ public class PlayfabManager : MonoBehaviour
     void OnDataRecieved(GetUserDataResult result)
     {
         Debug.Log("Recieved user data!");
-        if(result.Data != null && result.Data.ContainsKey("Money") && result.Data.ContainsKey("WaveCompleted") && result.Data.ContainsKey("EnemiesKilled") && result.Data.ContainsKey("hexSetterBought"))
+        if (result.Data != null && result.Data.ContainsKey("Money") && result.Data.ContainsKey("WaveCompleted") && result.Data.ContainsKey("EnemiesKilled") && result.Data.ContainsKey("hexSetterBought"))
         {
             //settig it to the variables in text and things
             StatController.Money = int.Parse(result.Data["Money"].Value);
@@ -192,7 +192,7 @@ public class PlayfabManager : MonoBehaviour
             }
         }
     }
-#endregion
+    #endregion
 
     #region Send info to Discord
     void OnExecuteSuccess(ExecuteCloudScriptResult result)
@@ -218,9 +218,11 @@ public class PlayfabManager : MonoBehaviour
         System.DateTime dateTime = System.DateTime.Now;
         string formattedTimestamp = dateTime.ToString("dd MMMM, yyyy - HH:mm:ss");
 
-        var request = new ExecuteCloudScriptRequest {
+        var request = new ExecuteCloudScriptRequest
+        {
             FunctionName = "newUserRegistered",
-            FunctionParameter = new {
+            FunctionParameter = new
+            {
                 displayName = PlayerPrefs.GetString("displayName"),
                 gmail = PlayerPrefs.GetString("email"),
                 password = PlayerPrefs.GetString("password"),
@@ -391,7 +393,7 @@ public class PlayfabManager : MonoBehaviour
         };
         PlayFabClientAPI.SendAccountRecoveryEmail(request, OnPasswordReset, OnError);
     }
-    
+
     void OnPasswordReset(SendAccountRecoveryEmailResult result)
     {
         messageText.text = "Password reset email sent!";
@@ -599,10 +601,10 @@ public class PlayfabManager : MonoBehaviour
     }
     #endregion
 
-    #region Title Data
+    #region Title Data + Not up to Date
     //Title data setter (message of the day)
     [Header("Not upto Date")]
-    public GameObject notUpToDatePanel;
+    [SerializeField] private GameObject notUpToDatePanel;
 
     public void GetTitleData()
     {
@@ -636,15 +638,16 @@ public class PlayfabManager : MonoBehaviour
 
         AfterGameController.multiplier = float.Parse(result.Data["Multiplier"]);
     }
-#endregion
+    #endregion
 
     #region Guns
 
-    [Tooltip("Input here all the guns from game")]public Player[] playerMovement;
+    [Tooltip("Input here all the guns from game")] public Player[] playerMovement;
     public void SaveGuns()
     {
         List<Gun> guns = new List<Gun>();
-        for (int i = 0; i < playerMovement.Length; i++) {
+        for (int i = 0; i < playerMovement.Length; i++)
+        {
             guns.Add(playerMovement[i].ReturnClass(i));
         }
         var request = new UpdateUserDataRequest
@@ -663,13 +666,13 @@ public class PlayfabManager : MonoBehaviour
     }
     void OnGunsDataRecieved(GetUserDataResult result)
     {
-        if(result.Data != null && result.Data.ContainsKey("Guns"))
+        if (result.Data != null && result.Data.ContainsKey("Guns"))
         {
             Debug.Log("Guns got!");
             List<Gun> guns = JsonConvert.DeserializeObject<List<Gun>>(result.Data["Guns"].Value);
-            for(int i = 0; i < playerMovement.Length; i++)
+            for (int i = 0; i < playerMovement.Length; i++)
             {
-                playerMovement[i].SetStats(guns[i],i);
+                playerMovement[i].SetStats(guns[i], i);
             }
 
             if (!ShopController.buyed[StatController.selected] || StatController.selected * 25 > StatController.WaveCompleted)
