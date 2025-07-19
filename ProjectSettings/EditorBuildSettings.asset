@@ -15,8 +15,8 @@ EditorBuildSettings:
     path: Assets/Scenes/ShopScene.unity
     guid: 8f4418590552b6a438be2ec2724e1068
   - enabled: 1
-    path: Assets/Scenes/LoadingScene.unity
-    guid: 724261725479fef498dd4d2d7a03ec80
+    path: Assets/Scene Loader Package/LoadingScene.unity
+    guid: 9ca40520951324b4e833cbf1b9d3fa47
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: d68d4430596370d46a7c3dc3faca6bf3,
       type: 2}

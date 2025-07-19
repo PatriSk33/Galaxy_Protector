@@ -1,15 +1,16 @@
 using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ShowHidePassword : MonoBehaviour
 {
-    public InputField inputField;
+    public TMP_InputField inputField;
     public SVGImage eyeIcon;
     public Sprite openEye, closeEye;
 
     private bool isPasswordVisible = false;
-    private InputField.InputType previousInputType;
+    private TMP_InputField.InputType previousInputType;
 
     private void Awake()
     {
@@ -24,7 +25,7 @@ public class ShowHidePassword : MonoBehaviour
         {
             eyeIcon.sprite = openEye;
             previousInputType = inputField.inputType;
-            inputField.inputType = InputField.InputType.Standard;
+            inputField.inputType = TMP_InputField.InputType.Standard;
         }
         else
         {

@@ -1,94 +1,159 @@
-using PlayFab.ClientModels;
-using PlayFab;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
 using EasyUI.PickerWheelUI;
+using TMPro;
 
 public class SpinningWheel : MonoBehaviour
 {
     [Header("Spin Wheel")]
-    [HideInInspector]public int spins;
-    public Text spinButtonText, spinRechargeText;
-    public Button spinButton;
+    [SerializeField] private int maxDailySpins = 1;
+    [SerializeField] private TMP_Text spinButtonText, spinRechargeText;
+    [SerializeField] private Button spinButton;
 
-    public static float secondsLeftToRefresh;
     [SerializeField] private PickerWheel pickerWheel;
 
+    private int spinsLeft;
+    private float secondsLeftToRefresh;
     private bool isRefreshing;
+
+    private const string SpinsLeftKey = "SpinsLeft";
+    private const string SpinsRefreshTimeKey = "SpinsRefreshTime";
+
+    private void Awake()
+    {
+        spinButton.onClick.AddListener(SpinTheWheel);
+    }
+
+    private void Start()
+    {
+        LoadSpinData();
+        UpdateUI();
+    }
 
     private void Update()
     {
-        if (spins == 0)
+        if (spinsLeft <= 0)
         {
-            secondsLeftToRefresh -= Time.deltaTime;
-            TimeSpan time = TimeSpan.FromSeconds(secondsLeftToRefresh);
-            spinRechargeText.text = time.ToString("hh':'mm':'ss");
-            if (secondsLeftToRefresh < 0 && !isRefreshing)
+            if (secondsLeftToRefresh > 0)
             {
-                isRefreshing = true;
-                GetVirtualCurrencies();
+                secondsLeftToRefresh -= Time.deltaTime;
+                TimeSpan time = TimeSpan.FromSeconds(secondsLeftToRefresh);
+                spinRechargeText.text = time.ToString("hh':'mm':'ss");
+                spinButton.interactable = false;
             }
-            spinButton.interactable = false;
+            else if (!isRefreshing)
+            {
+                RefreshSpins();
+            }
         }
         else
         {
+            spinRechargeText.text = "";
             spinButton.interactable = true;
         }
-    }
-
-    void OnError(PlayFabError error)
-    {
-        Debug.Log("Error occured while trying to spin. Error: " + error);
-        isRefreshing = false;
-    }
-
-    public void GetVirtualCurrencies()
-    {
-        PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetUserInventorySuccess, OnError);
-    }
-
-    public void OnGetUserInventorySuccess(GetUserInventoryResult result)
-    {
-        spins = result.VirtualCurrency["SP"];
-        secondsLeftToRefresh = result.VirtualCurrencyRechargeTimes["SP"].SecondsToRecharge;
-        isRefreshing = false;
     }
 
     public void SpinTheWheel()
     {
-        if (spins == 0)
+        if (spinsLeft <= 0)
         {
-            Debug.Log("You can't spin!");
+            Debug.Log("No spins left!");
             return;
         }
 
-        var request = new SubtractUserVirtualCurrencyRequest
-        {
-            VirtualCurrency = "SP",
-            Amount = 1
-        };
-        PlayFabClientAPI.SubtractUserVirtualCurrency(request, OnSubtractSpinsSuccess, OnError);
-    }
+        spinsLeft--;
+        SaveSpinData();
+        UpdateUI();
 
-    void OnSubtractSpinsSuccess(ModifyUserVirtualCurrencyResult result)
-    {
-        spins--;
         spinButton.interactable = false;
         spinButtonText.text = "Spinning";
 
-        pickerWheel.OnSpinStart(() =>  Debug.Log("Spin started..."));
-        
+        pickerWheel.OnSpinStart(() => Debug.Log("Spin started..."));
+
         pickerWheel.OnSpinEnd(wheelPiece =>
         {
             Debug.Log("Spin ended:\nAmount: " + wheelPiece.Amount);
-            spinButton.interactable = true;
-            spinButtonText.text = "Spin";
 
+            // Add to player's money locally
             StatController.Money += wheelPiece.Amount;
             StatController.Instance.Save();
             StatController.Instance.UpdateText();
+
+            spinButton.interactable = spinsLeft > 0;
+            spinButtonText.text = "Spin";
         });
+
         pickerWheel.Spin();
+    }
+
+    private void RefreshSpins()
+    {
+        spinsLeft = maxDailySpins;
+        secondsLeftToRefresh = 24 * 60 * 60; // 24 hours cooldown
+        isRefreshing = false;
+
+        SaveSpinData();
+        UpdateUI();
+
+        Debug.Log("Spins refreshed!");
+    }
+
+    private void SaveSpinData()
+    {
+        PlayerPrefs.SetInt(SpinsLeftKey, spinsLeft);
+
+        // Save next refresh time as UNIX timestamp
+        double nextRefreshTimestamp = DateTime.UtcNow.AddSeconds(secondsLeftToRefresh).ToOADate();
+        PlayerPrefs.SetString(SpinsRefreshTimeKey, nextRefreshTimestamp.ToString());
+
+        PlayerPrefs.Save();
+    }
+
+    private void LoadSpinData()
+    {
+        spinsLeft = PlayerPrefs.GetInt(SpinsLeftKey, maxDailySpins);
+
+        if (PlayerPrefs.HasKey(SpinsRefreshTimeKey))
+        {
+            double refreshOADate;
+            if (double.TryParse(PlayerPrefs.GetString(SpinsRefreshTimeKey), out refreshOADate))
+            {
+                DateTime nextRefreshTime = DateTime.FromOADate(refreshOADate);
+                secondsLeftToRefresh = (float)(nextRefreshTime - DateTime.UtcNow).TotalSeconds;
+                if (secondsLeftToRefresh < 0)
+                    secondsLeftToRefresh = 0;
+            }
+            else
+            {
+                secondsLeftToRefresh = 0;
+            }
+        }
+        else
+        {
+            secondsLeftToRefresh = 0;
+        }
+
+        isRefreshing = false;
+    }
+
+    private void UpdateUI()
+    {
+        spinButtonText.text = "Spin";
+        spinButton.interactable = spinsLeft > 0;
+
+        if (spinsLeft > 0)
+        {
+            spinRechargeText.text = "";
+        }
+        else if (secondsLeftToRefresh > 0)
+        {
+            TimeSpan time = TimeSpan.FromSeconds(secondsLeftToRefresh);
+            spinRechargeText.text = time.ToString("hh':'mm':'ss");
+        }
+        else
+        {
+            spinRechargeText.text = "Refreshing...";
+        }
     }
 }

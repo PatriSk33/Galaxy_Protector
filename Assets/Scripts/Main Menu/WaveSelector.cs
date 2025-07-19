@@ -1,11 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
+using UnityEngine.UI;   
 
 public class WaveSelector : MonoBehaviour
 {
-    [SerializeField] private InputField waveInput;
+    [SerializeField] private TMP_InputField waveInput;
+    [SerializeField] private Button selectButton;
+
+    private void Awake()
+    {
+        selectButton.onClick.AddListener(Select);
+    }
 
     public void Select()
     {
@@ -27,5 +34,7 @@ public class WaveSelector : MonoBehaviour
             StatController.Wave = StatController.WaveCompleted;
             StatController.Instance.UpdateText();
         }
+
+        gameObject.SetActive(false);
     }
 }

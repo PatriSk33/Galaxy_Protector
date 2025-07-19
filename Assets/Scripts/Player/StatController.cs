@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,43 +13,35 @@ public class GunStats
 
 public class StatController : MonoBehaviour
 {
-    //instance
     public static StatController Instance { get; private set; }
 
-    //Player
+    // Player stats
     public static float Damage;
     public static float FireRate;
     public static float Health;
     public static float MaxHealth;
 
-    //Ship
+    // Ship selection
     public static int selected = 0;
 
-    //Waves
+    // Waves
     public static int Wave, WaveCompleted;
-    public Text waveText;
+    public TMP_Text waveText;
 
-    //Money & Upgrades
+    // Money & upgrades
     public static int Money;
-    public Text moneyText;
-    public static int[] FireRateLvl = new int[4]; // fire rate lvl for each gun separately
-    public static int[] DamageLvl = new int[4]; // damage lvl for each gun separately
+    public TMP_Text moneyText;
+    public static int[] FireRateLvl = new int[4];
+    public static int[] DamageLvl = new int[4];
 
-    //Enemies Killed (Leaderboard)
+    // Enemies killed (for leaderboard, maybe)
     public static int enemiesKilled;
 
-    //Finished
-    public GameObject finishedScreen;
-    public bool finished;
-
-    //Feedback
+    // Feedback
     public static int timesPlayed;
 
-    //Stats for Guns
-    [SerializeField]private float[] startingDamage, startingFireRate;
-
-    //Network
-    private bool clientConnected; // Wifi ON
+    // Gun base stats
+    [SerializeField] private float[] startingDamage, startingFireRate;
 
     private void Awake()
     {
@@ -56,70 +49,45 @@ public class StatController : MonoBehaviour
 
         timesPlayed = PlayerPrefs.GetInt("timesPlayed", 0);
         selected = PlayerPrefs.GetInt("selected", 0);
-        
-        if(WaveCompleted <= 0)
-        {
+
+        if (WaveCompleted <= 0)
             WaveCompleted = 1;
-        }
     }
 
     private void Start()
     {
-        clientConnected = isConnectedToWifif();
-        if (clientConnected)
-        {
-            OnStart();
-        }
+        OnStart();
     }
 
     public void OnStart()
     {
-        //Show feedback panel
-        if (timesPlayed % 7 == 0 && timesPlayed > 0) { PlayfabManager.Instance.OpenPanel(PlayfabManager.Instance.feedbackPanel); }
-
+        // Load HexValue if HexSetter exists
         if (PlayerPrefs.HasKey("HexValue") && HexSetter.Instance != null)
         {
             HexSetter.Instance.hexValue = PlayerPrefs.GetString("HexValue");
             HexSetter.Instance.SetHexColor(HexSetter.Instance.hexValue);
         }
 
-        //Health
+        // Health setup
         SetMaximumHP();
         Health = MaxHealth;
 
         UpdateStats();
 
-        //Finished
-        if (WaveCompleted > 100) { WaveCompleted = 100; }
-        if (WaveCompleted == 100 && finished)
-        {
-            waveText.text = "Finished";
-            finishedScreen.SetActive(true);
-        }
+        // Finished condition
+        if (WaveCompleted > 100) WaveCompleted = 100;
+
         Wave = WaveCompleted;
 
         UpdateText();
     }
-
-    bool isConnectedToWifif()
-    {
-        if (Application.internetReachability == NetworkReachability.NotReachable) return false;
-        else return true;
-    }
-
-    public void FinishedOff(){ finishedScreen.SetActive(false); }
 
     private void OnApplicationPause(bool pause)
     {
         if (pause && SceneManager.GetActiveScene().buildIndex == 0)
         {
             Save();
-            Debug.Log("quited the app!!!!");
-            if (PlayerPrefs.HasKey("password") && PlayerPrefs.HasKey("email"))
-            {
-                PlayfabManager.Instance.SavePlayerPrefbs();
-                PlayfabManager.Instance.SaveGuns();
-            }
+            Debug.Log("App paused, progress saved.");
         }
     }
 
@@ -133,36 +101,51 @@ public class StatController : MonoBehaviour
     {
         PlayerPrefs.SetInt("selected", selected);
         PlayerPrefs.SetInt("timesPlayed", timesPlayed);
-        if (PlayerPrefs.HasKey("password") && PlayerPrefs.HasKey("email"))
-        {
-            PlayfabManager.Instance.SavePlayerPrefbs();
-        }
+
+        // Save upgrades
+        for (int i = 0; i < FireRateLvl.Length; i++)
+            PlayerPrefs.SetInt("FireRateLvl_" + i, FireRateLvl[i]);
+
+        for (int i = 0; i < DamageLvl.Length; i++)
+            PlayerPrefs.SetInt("DamageLvl_" + i, DamageLvl[i]);
+
+        PlayerPrefs.Save();
+    }
+
+    public void Load()
+    {
+        for (int i = 0; i < FireRateLvl.Length; i++)
+            FireRateLvl[i] = PlayerPrefs.GetInt("FireRateLvl_" + i, 0);
+
+        for (int i = 0; i < DamageLvl.Length; i++)
+            DamageLvl[i] = PlayerPrefs.GetInt("DamageLvl_" + i, 0);
+
+        UpdateStats();
+        UpdateText();
     }
 
     public void UpdateStats()
     {
-        GunStats[] gunStats = new GunStats[PlayfabManager.Instance.playerMovement.Length];
+        GunStats[] gunStats = new GunStats[LocalDataManager.Instance.GetPlayers().Length];
 
-        // Set individual starting values for each gun
         for (int i = 0; i < gunStats.Length; i++)
         {
-            gunStats[i] = new GunStats();
-            gunStats[i].startingFireRate = startingFireRate[i];
-            gunStats[i].startingDamage = startingDamage[i];
+            gunStats[i] = new GunStats
+            {
+                startingFireRate = startingFireRate[i],
+                startingDamage = startingDamage[i]
+            };
         }
 
-        float fireRate;
-        float damage;
-
-        fireRate = gunStats[selected].startingFireRate - (FireRateLvl[selected] * 0.08f);
-        damage = gunStats[selected].startingDamage + (DamageLvl[selected] * 0.8f);
+        float fireRate = gunStats[selected].startingFireRate - (FireRateLvl[selected] * 0.08f);
+        float damage = gunStats[selected].startingDamage + (DamageLvl[selected] * 0.8f);
 
         FireRate = Mathf.Clamp(fireRate, 0.3f, 1.8f);
         Damage = Mathf.Clamp(damage, 2f, 18.8f);
     }
 
+    private static readonly float[] maxHealthValues = { 25f, 50f, 100f, 150f };
 
-    private static readonly float[] maxHealthValues = { 25f, 50f, 100f, 150f};
     private void SetMaximumHP()
     {
         int selectedValue = Mathf.Clamp(selected, 0, maxHealthValues.Length - 1);

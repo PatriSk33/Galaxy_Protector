@@ -166,30 +166,25 @@ public class ShopController : MonoBehaviour
 
     public void BuyNow()
     {
-        if (PlayfabManager.clientConnected)
+        if (StatController.Money < price[Rockets])
         {
-            if (StatController.Money < price[Rockets])
-            {
-                Debug.Log("Not enough money...");
-                notEnoughMoneySound.Play();
-                return;
-            }
+            Debug.Log("Not enough money...");
+            notEnoughMoneySound.Play();
+            return;
+        }
 
-            if (buyed[Rockets - 1] && (Rockets * 25) >= StatController.WaveCompleted )
-            {
-                buyed[Rockets] = true;
-                StatController.Money -= price[Rockets];
+        if (buyed[Rockets - 1] && (Rockets * 25) >= StatController.WaveCompleted)
+        {
+            buyed[Rockets] = true;
+            StatController.Money -= price[Rockets];
 
-                buyButton.gameObject.SetActive(false);
-                selectButton.gameObject.SetActive(true);
-                priceTag.gameObject.SetActive(false);
-                selectButtonText.text = "Select";
+            buyButton.gameObject.SetActive(false);
+            selectButton.gameObject.SetActive(true);
+            priceTag.gameObject.SetActive(false);
+            selectButtonText.text = "Select";
 
-                StatController.Instance.Save();
-                PlayfabManager.Instance.SaveGuns();
-
-                LevelPlayAds.Instance.ShowFullSizeAd();
-            }
+            StatController.Instance.Save();
+            LocalDataManager.Instance.SaveData();
         }
     }
 

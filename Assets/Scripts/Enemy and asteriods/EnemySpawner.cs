@@ -198,10 +198,6 @@ public class EnemySpawner : MonoBehaviour
                 {
                     StatController.WaveCompleted++;
                 }
-                else if (StatController.Wave == 100)
-                {
-                    StatController.Instance.finished = true;
-                }
             }
 
             StatController.Instance.Save();

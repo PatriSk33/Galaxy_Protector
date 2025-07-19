@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
-using PlayFab;
-using PlayFab.ClientModels;
+using System.IO;
 using System.Collections.Generic;
 
 public class ResetPlayerData : MonoBehaviour
@@ -10,23 +8,24 @@ public class ResetPlayerData : MonoBehaviour
     public GameObject firstRegisterPanel;
     public GameObject confirmationPanel;
 
+    private string dataPath => Path.Combine(Application.persistentDataPath, "playerData.json");
+
     public void OnConfirmButtonClick()
     {
         confirmationPanel.SetActive(false);
         SettingsPanel.SetActive(false);
         firstRegisterPanel.SetActive(true);
 
-        // Reset PlayerPrefs
+        ResetPlayerProgress();
         ResetAllPlayerPrefs();
 
-        // Delete all player data in PlayFab
-        ClearPlayerDataVariables();
+        Debug.Log("Player progress reset, personal info retained.");
     }
 
     public void OnCancelButtonClick()
     {
         confirmationPanel.SetActive(false);
-        Debug.Log("Player data deletion canceled.");
+        Debug.Log("Player data reset canceled.");
     }
 
     public void ShowConfirmationPopup()
@@ -37,36 +36,28 @@ public class ResetPlayerData : MonoBehaviour
     private void ResetAllPlayerPrefs()
     {
         PlayerPrefs.DeleteAll();
-
-        // Save the changes
         PlayerPrefs.Save();
-
-        Debug.Log("All PlayerPrefs have been reset.");
     }
 
-    private void ClearPlayerDataVariables()
+    private void ResetPlayerProgress()
     {
-        // List of keys to remove
-        List<string> keysToRemove = new List<string>()
+        if (!File.Exists(dataPath))
         {
-            "Guns",
-            "Money",
-            "WaveCompleted"
-        };
+            Debug.LogWarning("No player data file found.");
+            return;
+        }
 
-        // Update the user data to remove specific variables
-        PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest()
-        {
-            Data = new Dictionary<string, string>(),
-            KeysToRemove = keysToRemove
-        },
-        result =>
-        {
-            Debug.Log("Player data variables cleared successfully.");
-        },
-        error =>
-        {
-            Debug.LogError("Failed to clear player data variables: " + error.GenerateErrorReport());
-        });
+        string json = File.ReadAllText(dataPath);
+        PlayerData playerData = JsonUtility.FromJson<PlayerData>(json);
+
+        // Clear progress-related fields but keep email, password, displayName
+        playerData.stats = new PlayerStats(); // resets ints to 0
+        playerData.guns = new List<Gun>();    // empty list
+
+        // Save updated data
+        string updatedJson = JsonUtility.ToJson(playerData, true);
+        File.WriteAllText(dataPath, updatedJson);
+
+        Debug.Log("Player progress cleared but personal info retained.");
     }
 }

@@ -58,7 +58,7 @@ public class GameplayUIButtons : MonoBehaviour
     {
         if (canRevive)
         {
-            LevelPlayAds.Instance.ShowRewardedAd("Revive_Player");
+            // use 100 coins to revive
         }
     }
 
@@ -78,16 +78,11 @@ public class GameplayUIButtons : MonoBehaviour
     }
 
 
-    // After Game Panel / AD
+    // After Game Panel
     public void OpenAfterGame()
     {
         AfterGameController.won = false;
         AfterGameController.Instance.ShowPanel();
-    }
-
-    public void DoubleMoneyAd()
-    {
-        LevelPlayAds.Instance.ShowRewardedAd("Double_Money");
     }
 
 
